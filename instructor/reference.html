@@ -364,13 +364,97 @@
         </div>
 
         
+
 <section><h2 class="section-heading" id="glossary">Glossary<a class="anchor" aria-label="anchor" href="#glossary"></a></h2>
-<hr class="half-width"><p>This is a placeholder file. Please add content here.</p>
-<!--
+<hr class="half-width"><p>{:auto_ids}</p>
+<dl><dt>AnnotationData package</dt>
+<dd>
+Type of Bioconductor package that provides databases of molecular
+annotations (e.g., genes, proteins, pathways).
+</dd>
+<dt>biocViews</dt>
+<dd>
+Directed acyclic graphs of terms from a controlled vocabulary, used to
+categorize R packages in the Bioconductor repository. The
+<code>biocViews</code> can be browsed on the <a href="https://www.bioconductor.org/packages/release/BiocViews.html" class="external-link">Bioconductor
+website</a>.
+</dd>
+<dt>ExperimentData package</dt>
+<dd>
+Type of Bioconductor package that provides experimental datasets,
+immediately available as standard Bioconductor objects. This type of
+package is often used in <a href="#vignette">package vignettes</a>, to
+conveniently import data used to demonstrate the functionality of other
+packages as well as larger workflows. Experiment data packages can be
+explored on the <a href="https://www.bioconductor.org/packages/release/BiocViews.html#___ExperimentData" class="external-link">biocViews
+page</a>.
+</dd>
+<dt>S4 class</dt>
+<dd>
+R has three object-oriented programming (OOP) systems: S3, S4 and R6 (or
+Reference Classes). S4 is system that defines formal classes, using an
+implementation that is stricter than the S3 class system. Classes define
+the conceptual structure of S4 objects, while S4 objects represent
+practical instances of their class. See <a href="#s4-object">S4
+object</a>.
+</dd>
+<dt>S4 class slot</dt>
+<dd>
+Slots can be seen as parts, elements, properties, or attributes of S4
+objects. Each slot is defined by its name and the data type that it may
+contain.
+</dd>
+<dt>S4 generic</dt>
+<dd>
+Template function for <a href="#s4-method">S4 methods</a> that defines
+the arguments considered for <a href="s4-method-dispatch">S4 method
+dispatch</a>.
+</dd>
+<dt>S4 method</dt>
+<dd>
+Instance of an <a href="#s4-generic">S4 generic</a> for a particular
+combination of classes across the arguments considered for <a href="s4-method-dispatch">S4 method dispatch</a>.
+</dd>
+<dt>S4 method dispatch</dt>
+<dd>
+Mechanism allowing R to identify and call the implementation of an <a href="#s4-generic">S4 generic</a> R function according to the class of
+object(s) given as argument(s).
+</dd>
+<dt>S4 object</dt>
+<dd>
+S4 objects are instances of S4 classes, in the same way that an actual
+car is an instance of the definition of a car that one would find in a
+dictionary.
+</dd>
+<dt>Software package</dt>
+<dd>
+Type of Bioconductor package that provides implementations of
+methodologies for processing experimental data.
+</dd>
+<dt>Vignette</dt>
+<dd>
+Document(s) in PDF or HTML format, distributed and installed alongside
+package code, providing long-form documentation that demonstrates the
+use of the package functionality in the context of an example workflow.
+Vignettes typically use standard datasets obtained from an <a href="#experimentdata-package">ExperimentData package</a> or the <a href="https://bioconductor.org/packages/ExperimentHub/" class="external-link"><em>ExperimentHub</em></a>
+package.
+</dd>
+<dt>Workflow package</dt>
+<dd>
+Type of Bioconductor package that exclusively provides vignettes used to
+demonstrate the use of multiple Bioconductor packages in the context of
+a large workflow.
+</dd>
+</dl></section><section><h2 class="section-heading" id="web-resources">Web resources<a class="anchor" aria-label="anchor" href="#web-resources"></a></h2>
+<hr class="half-width"><dl><dt><em><a href="https://bioconductor.org/" class="external-link">Bioconductor
+website</a></em></dt>
+<dd>
+The official Bioconductor website.
+</dd>
+</dl><!--
 Place links that you need to refer to multiple times across pages here. Delete
 any links that you are not going to use.
- -->
-</section></div> <!-- / div.lesson-content -->
+ --></section></div> <!-- / div.lesson-content -->
     </main><!-- / main#main-content.main-content --><nav class="bottom-pagination mx-md-4" aria-label="Previous and Next Chapter"><div class="d-block d-sm-block d-md-none">
         <a class="chapter-link" href="../instructor/index.html"><i aria-hidden="true" class="small-arrow" data-feather="arrow-left"></i>Previous</a>
         <a class="chapter-link float-end" href="../instructor/index.html">Next<i aria-hidden="true" class="small-arrow" data-feather="arrow-right"></i></a>

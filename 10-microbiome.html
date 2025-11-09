@@ -438,20 +438,29 @@ data matrix of lipid species.</p>
 <pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">data</span><span class="op">(</span><span class="va">peerj32</span><span class="op">)</span></span></code></pre>
 </div>
-<div class="section level3 Activity">
-<h3 id="exploring-whats-in-a-dataset">Exploring whats in a dataset<a class="anchor" aria-label="anchor" href="#exploring-whats-in-a-dataset"></a></h3>
+<div id="challenge---exploring-data" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<span class="callout-header">Challenge</span>
+<div id="challenge---exploring-data" class="callout-inner">
+<h3 class="callout-title">Challenge - exploring data</h3>
+<div class="callout-content">
 <p>Explore the two datasets <code>dietswap</code> and
 <code>perj32</code> that you just loaded. You can do this by navigating
 to your “Environment” pane, or in the console try the following
 <code>pseq@</code> and see what options are available to you. Can you
 view the metadata for this data set? Why does <code>peerj32@</code> not
 work in the same way?</p>
+</div>
+</div>
+</div>
 <div id="accordionSolution1" class="accordion challenge-accordion accordion-flush">
 <div class="accordion-item">
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
 <div class="accordion-body">
 <p>To see the full data within the <code>peerj32</code> object try
 typing <code>peerj32$</code> into the console.</p>
@@ -459,10 +468,10 @@ typing <code>peerj32$</code> into the console.</p>
 </div>
 </div>
 </div>
-</div>
 </section><section><h2 class="section-heading" id="visualizing-complex-data">Visualizing complex data<a class="anchor" aria-label="anchor" href="#visualizing-complex-data"></a></h2>
-<hr class="half-width"></section><section><h2 class="section-heading" id="saving-your-data">Saving your data<a class="anchor" aria-label="anchor" href="#saving-your-data"></a></h2>
-<hr class="half-width"><p>Lets say you have spent a long time getting your data formated and
+<hr class="half-width"><p>…</p>
+</section><section><h2 class="section-heading" id="saving-your-data">Saving your data<a class="anchor" aria-label="anchor" href="#saving-your-data"></a></h2>
+<hr class="half-width"><p>Let’s say you have spent a long time getting your data formatted and
 read into R.</p>
 <p>Now you will want to do some visualizations on this data and it is
 likely this will need to be repeated (many) times in the future.</p>
@@ -479,7 +488,7 @@ environment to your local directory.</p>
 <pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">save</span><span class="op">(</span><span class="va">peerj32</span>, file <span class="op">=</span> <span class="st">"data/peerj32.rda"</span><span class="op">)</span></span></code></pre>
 </div>
-<p>You can quickly load the .rda file back in</p>
+<p>You can quickly load the <code>.rda</code> file back in</p>
 <div class="codewrapper sourceCode" id="cb6">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
@@ -490,13 +499,22 @@ environment to your local directory.</p>
 </section><section><h2 class="section-heading" id="making-reproducible-and-easy-to-share-reports">Making reproducible and easy to share reports<a class="anchor" aria-label="anchor" href="#making-reproducible-and-easy-to-share-reports"></a></h2>
 <hr class="half-width"><p>Next I have prepared a <code>.qmd</code> file that you will download
 and then “knit” to reproducible a <code>.html</code> file.</p>
-<p>:::::::::::::::::::::::::::::::::::::::: The Situation</p>
+<div id="the-situation---sharing-results" class="callout">
+<div class="callout-square">
+<i class="callout-icon" data-feather="bell"></i>
+</div>
+<span class="callout-header">Callout</span>
+<div id="the-situation---sharing-results" class="callout-inner">
+<h3 class="callout-title">The Situation - Sharing Results</h3>
+<div class="callout-content">
 <p>Imagine you need to give your supervisors a summary of your findings
 early on, instead of spending weeks neatly formatting and exporting
 plots one by one in R you may like to share this html file early in your
 analysis to get some general feedback and direction before find tuning
 your analysis.</p>
-<p>::::::::::::::::::::::::::::::::::::::::::::::::::</p>
+</div>
+</div>
+</div>
 <p>It is best practice to not re-install the packages each time when
 making these reports, so ensure you have the required packages installed
 prior to running.</p>
@@ -517,20 +535,43 @@ prior to running.</p>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"microbiome"</span><span class="op">)</span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"phyloseq"</span><span class="op">)</span></span></code></pre>
 </div>
-<p>Download the qmd file</p>
+<p>Download the <code>.qmd</code> file</p>
 <div class="codewrapper sourceCode" id="cb8">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">download.file</span><span class="op">(</span></span>
-<span>  url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/Bioconductor/bioconductor-teaching/devel/data/SummarizedExperiment/gene_metadata.csv"</span>,</span>
+<span>  url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/siobhon-egan/2025-11-13-COMBINE-WA/refs/heads/main/episodes/files/microbiome-data-report.qmd"</span>,</span>
 <span>  destfile <span class="op">=</span> <span class="st">"data/microbiome-report.qmd"</span></span>
 <span><span class="op">)</span></span></code></pre>
 </div>
 <p>Have a go at rendering the <code>.qmd</code> file.</p>
-<p>Take note the <code>sessionInfo()</code> at the bottom - this is a
+<div id="challenge" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<span class="callout-header">Challenge</span>
+<div id="challenge" class="callout-inner">
+<h3 class="callout-title">Challenge</h3>
+<div class="callout-content">
+<p>Have a go at rendering the <code>.qmd</code> file.</p>
+</div>
+</div>
+</div>
+<div id="accordionSolution2" class="accordion challenge-accordion accordion-flush">
+<div class="accordion-item">
+<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
+  <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
+</button>
+<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
+<div class="accordion-body">
+<p>Take note of the <code>sessionInfo()</code> at the bottom - this is a
 handy way to track versions of packages used to generate analysis.</p>
-<p>Recommendations for rendering your <code>.qmd</code>:</p>
+</div>
+</div>
+</div>
+</div>
+<p>Some recommendations for rendering your <code>.qmd</code>:</p>
 <ul><li>Hide warnings and messages from your R chunks</li>
 <li>Keeping your code in the output can be good to see what data was
 used for analysis and if any filtering or transformations were used,
