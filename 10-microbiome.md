@@ -57,14 +57,15 @@ data(peerj32)
 ```
 
 
-:::::::::::::::::::::::::::::::::::::::  Activity
+:::::::::::::::::::::::::::::::::::::::  challenge
 
-### Exploring whats in a dataset
+### Challenge - exploring data
 
 Explore the two datasets `dietswap` and `perj32` that you just loaded. You can do this by navigating to your "Environment" pane, or in the console try the following `pseq@` and see what options are available to you. Can you view the metadata for this data set? Why does `peerj32@` not work in the same way?
 
 :::::::::::::::  solution
 
+### Solution
 
 To see the full data within the `peerj32` object try typing `peerj32$` into the console. 
 
@@ -72,11 +73,15 @@ To see the full data within the `peerj32` object try typing `peerj32$` into the 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
+
 ## Visualizing complex data
+
+...
+
 
 ## Saving your data
 
-Lets say you have spent a long time getting your data formated and read into R.
+Let's say you have spent a long time getting your data formatted and read into R.
 
 Now you will want to do some visualizations on this data and it is likely this will need to be repeated (many) times in the future.
 
@@ -89,7 +94,7 @@ Have a go at saving the `peerj32` object that is in your environment to your loc
 save(peerj32, file = "data/peerj32.rda")
 ```
 
-You can quickly load the .rda file back in
+You can quickly load the `.rda` file back in
 
 
 ``` r
@@ -98,11 +103,15 @@ load("data/peerj32.rda")
 
 ....
 
+
 ## Making reproducible and easy to share reports
 
 Next I have prepared a `.qmd` file that you will download and then "knit" to reproducible a `.html` file. 
 
-:::::::::::::::::::::::::::::::::::::::: The Situation
+
+:::::::::::::::::::::::::::::::::::::::: callout
+
+### The Situation - Sharing Results
 
 Imagine you need to give your supervisors a summary of your findings early on, instead of spending weeks neatly formatting and exporting plots one by one in R you may like to share this html file early in your analysis to get some general feedback and direction before find tuning your analysis.
 
@@ -126,23 +135,38 @@ BiocManager::install("microbiome")
 BiocManager::install("phyloseq")
 ```
 
-
-
-Download the qmd file
+Download the `.qmd` file
 
 
 ``` r
 download.file(
-  url = "https://raw.githubusercontent.com/Bioconductor/bioconductor-teaching/devel/data/SummarizedExperiment/gene_metadata.csv",
+  url = "https://raw.githubusercontent.com/siobhon-egan/2025-11-13-COMBINE-WA/refs/heads/main/episodes/files/microbiome-data-report.qmd",
   destfile = "data/microbiome-report.qmd"
 )
 ```
 
 Have a go at rendering the `.qmd` file.
 
-Take note the `sessionInfo()` at the bottom - this is a handy way to track versions of packages used to generate analysis.
 
-Recommendations for rendering your `.qmd`:
+:::::::::::::::::::::::::::::::::::::::  challenge
+
+### Challenge
+
+Have a go at rendering the `.qmd` file. 
+
+:::::::::::::::  solution
+
+### Solution
+
+Take note of the `sessionInfo()` at the bottom - this is a handy way to track versions of packages used to generate analysis.
+
+
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+Some recommendations for rendering your `.qmd`:
 
 - Hide warnings and messages from your R chunks
 - Keeping your code in the output can be good to see what data was used for analysis and if any filtering or transformations were used, however it is not always neccessary and can make it difficult for other "non-coders" to read. In the "YAML" at the top you will see the option `code-fold: true` is used to allow us to toggle the code on and off.

@@ -41,7 +41,7 @@ This workshop has been written is an **intermediate R** audience and as such we 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-This lesson has been made on the [lesson-intro-r-bioconductor]: https://carpentries-incubator.github.io/bioc-intro/index.html
+This lesson has been made on the [lesson-intro-r-bioconductor](https://carpentries-incubator.github.io/bioc-intro/index.html)
 
 ---
 
