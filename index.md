@@ -54,7 +54,7 @@ This workshop has been written is an **intermediate R** audience and as such we 
 You will also need to install the following packages that will be used throughout the lesson - do this while the instructor is talking!
 
 
-```{r}
+```r
 install.packages(c("BiocManager", "remotes", "knitr"))
 BiocManager::install(c(
   "S4Vectors", "Biostrings", "BSgenome",

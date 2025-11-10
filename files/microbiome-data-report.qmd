@@ -25,6 +25,7 @@ library(dplyr)
 library(reshape2)
 library(knitr)
 library(gtsummary)
+library(DT)
 
 # Load in data - apply any sub-setting and transformations
 data(peerj32)
@@ -53,6 +54,77 @@ pseq@sam_data %>%
 
 
 ## Alpha diversity
+
+```{r}
+tab <-microbiome::alpha(pseq, index = "all")
+kable(head(tab))
+```
+
+```{r, message=FALSE, echo=F}
+# display the linelist data as a table
+DT::datatable(head(tab, 50), rownames = FALSE, filter="top", options = list(pageLength = 10, scrollX=T), class = 'white-space: nowrap' )
+```
+
+Shannon alpha diversity measure by sex
+```{r}
+p.shannon <- boxplot_alpha(pseq, 
+                           index = "shannon",
+                           x_var = "sex",
+                           fill.colors = c(female="cyan4", male="deeppink4"))
+
+p.shannon <- p.shannon + theme_minimal() + 
+  labs(x="Sex", y="Shannon diversity") +
+  theme(axis.text = element_text(size=12),
+        axis.title = element_text(size=16),
+        legend.text = element_text(size=12),
+        legend.title = element_text(size=16))
+p.shannon
+```
+
+**Testing differences in alpha diversity** 
+Using the non-parametric Kolmogorov-Smirnov test for two-group comparisons when there are no relevant covariates.
+
+```{r}
+# Construct the data
+d <- meta(pseq)
+d$diversity <- microbiome::diversity(pseq, "shannon")$shannon
+# Split the values by group
+spl <- split(d$diversity, d$sex)
+# Kolmogorov-Smironv test
+pv <- ks.test(spl$female, spl$male)$p.value
+# Adjust the p-value
+padj <- p.adjust(pv)
+padj
+```
+
+## Composition
+
+```{r}
+
+ps1.saliva <- subset_samples(ps1, group == "Placebo")
+total_samples <- phyloseq::nsamples(ps1.saliva)
+
+ps1.saliva.pruned <- prune_taxa(taxa_sums(ps1.saliva) >0, ps1.saliva)
+
+# merge all taxa that are detected rare
+pseq.fam <- aggregate_rare(ps1.saliva.pruned, level="Family", detection = 50, prevalence = 25/total_samples)
+
+# Remove the "f__" before the family names
+taxa_names(pseq.fam) <- gsub("f__", "", taxa_names(pseq.fam) )
+
+p.fam <- plot_composition(pseq.fam, sample.sort = NULL,
+                          otu.sort = NULL,
+                          plot.type = "barplot",
+                          verbose = FALSE) +
+  xlab("Animal secretion samples") +
+  theme_bw() + 
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x=element_blank()) +
+  scale_fill_brewer("Family", palette = "Paired")
+
+p.fam
+```
+
 
 ## Beta diversity
 
