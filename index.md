@@ -26,7 +26,17 @@ In this lesson, you will learn:
 - To identify standard classes and methods re-used across Bioconductor packages.
 - To modify code and contribute to existing Bioconductor packages.
 - Best practices to get help from packages developers and peers.
-- Apply bioconductor packages to a biological dataset and generate visualizations and reproducible analysis
+
+**Additional components for this workshop**
+
+- Apply bioconductor packages to a biological dataset
+  - Inspect how multi-data sets are stored
+  - Data visualizations
+- Generating & **Re-generating** analysis
+  - Saving and loading data quickly
+  - Reproducible analysis
+  - Reports for communicating results
+
 
 
 ::::::::::::::::::::::::::::::::::::::::::  prereq
@@ -40,6 +50,20 @@ This workshop has been written is an **intermediate R** audience and as such we 
     
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
+
+You will also need to install the following packages that will be used throughout the lesson - do this while the instructor is talking!
+
+
+```{r}
+install.packages(c("BiocManager", "remotes", "knitr"))
+BiocManager::install(c(
+  "S4Vectors", "Biostrings", "BSgenome",
+  "BSgenome.Hsapiens.UCSC.hg38.masked",
+  "GenomicRanges", "rtracklayer", "biomaRt",
+  "microbiome"))
+```
+
+
 
 This lesson has been made on the [lesson-intro-r-bioconductor](https://carpentries-incubator.github.io/bioc-intro/index.html)
 

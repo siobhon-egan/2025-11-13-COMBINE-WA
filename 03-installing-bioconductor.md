@@ -271,7 +271,7 @@ length(BiocManager::available())
 ```
 
 ``` output
-[1] 26617
+[1] 26624
 ```
 
 Specifically, the union of current Bioconductor repositories and other repositories on the search path can be displayed as follows.
