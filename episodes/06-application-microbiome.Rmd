@@ -135,10 +135,9 @@ phy_tree()    Phylogenetic Tree: [ 19216 tips and 19215 internal nodes ]
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
+# Working with data
 
-## Visualising data
-
-Now we will have a go at working through some data visualizations and improving asesthetics ready for publications or sharing with colleagues.
+Now we will have a go at working through some data **visualizations** and improving aesthetics ready for publications or sharing with colleagues.
 
 For this exercise we will work through using the `GlobalPatterns` data. 
 
@@ -147,7 +146,8 @@ For this exercise we will work through using the `GlobalPatterns` data.
 First a re-fresh of what the sample data contains for this dataset
 
 ```{r}
-GlobalPatterns@sam_data
+#show just the first five rows
+head(GlobalPatterns@sam_data)
 ```
 
 Next we often need to do some data pruning or subsetting. In this case we are making sure we remove taxa that doesn't have any sequences present.
@@ -159,7 +159,7 @@ GlobalPatterns
 GP
 ```
 
-### Alpha diversity plots
+## Alpha diversity plots
 
 For microbiome (or community analysis) a common strategy is to visualize the alpha diversity of samples. Essentially this is how many unique taxa were identified in each sample.
 
@@ -196,8 +196,8 @@ plot_richness(GP, x="SampleType", measures=c("Chao1", "Shannon"))
 
 Now suppose we wanted to use an external variable in the plot that isn’t in the `GP` dataset already – for example, a logical that indicated whether or not the samples are human-associated. First, define this new variable, `human`, as a factor (other vectors could also work; or other data you might have describing the samples).
 
-```{r}
-sampleData(GP)$human <- getVariable(GP, "SampleType") %in% 
+```{r message=FALSE, warning=FALSE}
+sampleData(GP)$human <- getVariable(GP, "SampleType") %in%
   c("Feces", "Mock", "Skin", "Tongue")
 ```
 
@@ -250,17 +250,320 @@ We can see that the first layer is the one specifying the original points, which
 
 ```{r}
 p$layers <- p$layers[-1]
-p + geom_point(size=5, alpha=0.7)
 ```
 
-### Phylogenetic trees
+We can further improvde on the plots by setting the theme to something simpler.
 
-[](https://joey711.github.io/phyloseq/plot_tree-examples.html)
+```{r}
+p1 + theme_bw()
+```
+
+## Updating the data & re-formatting
+
+Now we are going to get a bit more tedious with our data formatting and figures. Lets say on the plot above we want to actually order the `SampleType` on the legend by group the sample of human origin together and those of non-human together.
+
+To do this - we have to first extract out the `sam_data` as its own data frame and add in a new column with the factor in this order.
+
+```{r}
+# Extract the sample data as a data frame
+sample_data_df <- as.data.frame(GlobalPatterns@sam_data)
+# Give it a slightly different column name `SampleTypeOrigin`
+sample_data_df$SampleTypeOrigin <- sample_data_df$SampleType
+
+# Set the order for this factor
+desired_order_levels <- c(
+  "Feces",
+  "Skin",
+  "Tongue",
+  "Mock",
+  "Freshwater",
+  "Freshwater (creek)",
+  "Ocean",
+  "Sediment (estuary)",
+  "Soil"
+)
+
+# Now we set the factor and order
+sample_data_df$SampleTypeOrigin <- factor(sample_data_df$SampleTypeOrigin, levels = desired_order_levels)
+# Re-make the `GlobalPatterns` data object with this data frame and you will see we now have 9 sample variables
+sample_data(GlobalPatterns) <- sample_data_df
+GlobalPatterns
+```
+
+But because we remade the phyloseq object we now need to perform the same subsetting we did to generate the `GP` data object again. We also have to add in that extra `human` variable again too.
+
+```{r}
+# Remove taxa with 0 reads
+GP <- prune_species(speciesSums(GlobalPatterns) > 0, GlobalPatterns)
+
+# Add in the human variable for SampleType
+sampleData(GP)$human <- getVariable(GP, "SampleType") %in%
+  c("Feces", "Mock", "Skin", "Tongue")
+
+sample_data(GP)$human <- as.logical(sample_data(GP)$human)
+```
+
+### Remaking the alpha diversity plot
+
+Only *now* we can we remake that alpha diversity plot from before - now the change in order of the legend
+```{r}
+p <- plot_richness(
+  GP,
+  x = "human",
+  color = "SampleTypeOrigin",
+  measures = c("Chao1", "Shannon")
+)
+p1 <- p + geom_point(size = 5, alpha = 0.7)
+p1
+```
+
+We can then apply a manual customise colour scale for our variables, grouping by colour
+```{r}
+p1 + scale_color_manual(values = c(
+  "#9e0142",
+  "#d53e4f",
+  "#f46d43",
+  "#252525",
+  "#e6f598",
+  "#abdda4",
+  "#66c2a5",
+  "#3288bd",
+  "#5e4fa2"
+) ) + theme_bw()
+```
+
+> In collaborative research, it’s almost inevitable that you’ll need to add extra variables or create new ways to subset and view your data. Different team members—each with unique backgrounds and priorities—often request specific visualizations to highlight patterns relevant to their perspective.
+Rather than treating these requests as a burden, you can make them efficient and reproducible by following good practices.
+
+When your supervisor asks for a new grouping or your collaborator wants to see results by location instead of treatment, you can adapt quickly—without rewriting your entire analysis. This approach saves time, reduces errors, and keeps your workflow transparent.
 
 
-### Ordination plots
+## Phylogenetic trees
 
-[](https://joey711.github.io/phyloseq/plot_ordination-examples.html)
+The next set of figures work through some visualization pf phylogenetic trees and incorporations of sample data for annotation, examples taken from the [phyloseq tree tutorial](https://joey711.github.io/phyloseq/plot_tree-examples.html).
+
+
+We want to plot trees, sometimes even bootstrap values, but notice that the node labels in the `GlobalPatterns` dataset are actually a bit strange. They look like they might be bootstrap values, but they sometimes have two decimals.
+
+```{r}
+head(phy_tree(GlobalPatterns)$node.label, 10)
+```
+
+Could systematically remove the second decimal, but why not just take the first 4 characters instead?
+```{r}
+phy_tree(GlobalPatterns)$node.label = substr(phy_tree(GlobalPatterns)$node.label, 1, 4)
+```
+
+Great, now that we're more happy with the node labels at least looking like bootstrap values, we can move on to using these along with other information about data mapped onto the tree graphic.
+
+The `GlobalPatterns` dataset has many OTUs, more than we would want to try to fit on a tree graphic
+```{r}
+ntaxa(GlobalPatterns)
+```
+
+So, let's arbitrarily prune to just the first 50 OTUs in `GlobalPatterns`, and store this as `physeq`, which also happens to be the name for most main data parameters of function in the phyloseq package.
+
+```{r}
+physeq <- prune_taxa(taxa_names(GlobalPatterns)[1:50], GlobalPatterns)
+```
+
+Now let's look at what happens with the default `plot_tree` settings.
+```{r}
+plot_tree(physeq)
+```
+
+By default, black dots are annotated next to tips (OTUs) in the tree, one for each sample in which that OTU was observed. Some have more dots than others. Also by default, the node labels that were stored in the tree were added next to each node without any processing (although we had trimmed their length to 4 characters in the previous step).
+
+What if we want to just see the tree with no sample points next to the tips?
+```{r}
+plot_tree(physeq, "treeonly")
+```
+And what about without the node labels either?
+```{r}
+plot_tree(physeq, "treeonly", nodeplotblank)
+```
+We can adjust the way branches are rotated to make it look nicer using the `ladderize` parameter.
+```{r}
+plot_tree(physeq, "treeonly", nodeplotblank, ladderize="left")
+plot_tree(physeq, "treeonly", nodeplotblank, ladderize=TRUE)
+```
+And what if we want to add the OTU labels next to each tip?
+```{r}
+plot_tree(physeq, nodelabf=nodeplotblank, label.tips="taxa_names", ladderize="left")
+```
+
+Any `method` parameter argument other than `"sampledodge"` (the default) will not add dodged sample points next to the tips.
+```{r}
+plot_tree(physeq, "anythingelse")
+```
+
+### Mapping Variables in Data
+
+In the default argument to `method`, `"sampledodge"`, a point is added next to each OTU tip in the tree for every sample in which that OTU was observed. We can then map certain aesthetic features of these points to variables in our data.
+
+#### Color
+
+Color is one of the most useful aesthetics in tree graphics when they are complicated. Color can be mapped to either taxonomic ranks or sample covariates. For instance, we can map color to the type of sample collected (environmental location).
+```{r}
+plot_tree(physeq, nodelabf=nodeplotboot(), ladderize="left", color="SampleType")
+```
+
+**Keeping colours consistant!**
+
+Now that you are intermediate R users you would be picking up on the different colour scales used to map against the same variable. It is best practice to keep these consistent across the different types of figures. So let's regenerate the figure mapping the `SampleTypeOrigin` variable to the same set of colours we used above for the alpha diversity plot
+
+```{r}
+plot_tree(physeq,
+  nodelabf = nodeplotboot(),
+  ladderize = "left",
+  color = "SampleTypeOrigin") + scale_color_manual(
+    values = c(
+      "#9e0142",
+      "#d53e4f",
+      "#f46d43",
+      "#252525",
+      "#e6f598",
+      "#abdda4",
+      "#66c2a5",
+      "#3288bd",
+      "#5e4fa2"
+    )
+  ) 
+```
+
+You can make this even more efficent by including the colouring of a variable in your global R chunk for the set up and then refer to it using the value - in this case `SampleTypeOriginCols`
+
+```{r}
+SampleTypeOriginCols <- c(
+      "#9e0142",
+      "#d53e4f",
+      "#f46d43",
+      "#252525",
+      "#e6f598",
+      "#abdda4",
+      "#66c2a5",
+      "#3288bd",
+      "#5e4fa2"
+    )
+plot_tree(physeq,
+  nodelabf = nodeplotboot(),
+  ladderize = "left",
+  color = "SampleTypeOrigin") + scale_color_manual(
+    values = SampleTypeOriginCols)
+```
+
+
+We can also map color to taxonomic class.
+```{r}
+plot_tree(physeq, nodelabf=nodeplotboot(), ladderize="left", color="Class")
+```
+This time we don't mind the differrent colours because we are mapping it against taxonomy
+
+#### Shape
+
+You can also map a variable to point shape if it has 6 or fewer categories, and this can be done even when color is also mapped. Here we map shape to taxonomic class so that we can still indicate it in the graphic while also mapping `SampleType` to point color.
+```{r}
+plot_tree(
+  physeq,
+  nodelabf = nodeplotboot(),
+  ladderize = "left",
+  color = "SampleTypeOrigin",
+  shape = "Class"
+) + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+### Node labels
+
+One of the most common reasons to label nodes is to add confidence measures, often a bootstrap value, to the nodes of the tree. The following graphics show different ways of doing this (labels are added by default if present in your tree).
+```{r}
+# The default
+plot_tree(physeq, color = "SampleTypeOrigin", ladderize = "left") + scale_color_manual(values = SampleTypeOriginCols) 
+# Special bootstrap label
+plot_tree(physeq,
+  nodelabf = nodeplotboot(),
+  color = "SampleTypeOrigin",
+  ladderize = "left") + scale_color_manual(values = SampleTypeOriginCols) 
+# Special bootstrap label with alternative thresholds
+plot_tree(
+  physeq,
+  nodelabf = nodeplotboot(80, 0, 3),
+  color = "SampleTypeOrigin",
+  ladderize = "left"
+) + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+### Tip labels
+
+- **label.tips** - The `label.tips` parameter controls labeling of tree tips (AKA leaves).  Default is NULL, indicating that no tip labels will be printed. If `"taxa_names"` is a special argument resulting in the OTU name (try `taxa_names` function) being labelled next to the leaves or next to the set of points that label the leaves. Alternatively, if your data object contains a `tax_table`, then one of the rank names (from `rank_names(physeq)`) can be provided, and the classification of each OTU at that rank will be labeled instead.
+- **text.size** - A positive numeric argument indicating the ggplot2 size parameter for the taxa labels. Default is `NULL`. If left as `NULL`, this function will automatically calculate a (hopefully) optimal text size given the size constraints posed by the tree itself (for a vertical tree). This argument is included mainly in case the automatically-calculated size is wrong and you want to change it. Note that this parameter is only meaningful if `label.tips` is not `NULL`
+
+```{r}
+plot_tree(
+  physeq,
+  nodelabf = nodeplotboot(80, 0, 3),
+  color = "SampleTypeOrigin",
+  label.tips = "taxa_names",
+  ladderize = "left"
+) + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+### Radial Tree
+
+Making a radial tree is easy with ggplot2, simply recognizing that our vertically-oriented tree is a cartesian mapping of the data to a graphic -- and that a radial tree is the same mapping, but with polar coordinates instead.
+
+```{r}
+data(esophagus)
+plot_tree(esophagus, color = "Sample", ladderize = "left") + coord_polar(theta =
+    "y")
+```
+
+The `GlobalPatterns` dataset has additional data we can map, so we will re-do some preliminary data loading/trimming to make this radial-tree example self contained, and then show the same plot as above.
+
+```{r}
+plot_tree(
+  physeq,
+  nodelabf = nodeplotboot(60, 60, 3),
+  color = "SampleTypeOrigin",
+  shape = "Class",
+  ladderize = "left"
+) + coord_polar(theta = "y") + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+
+:::::::::::::::::::::::::::::::::::::::  challenge
+
+### More Examples with the Global Patterns dataset
+
+Try exploring more options for generating trees but subsetting specific taxa. Starting the Archaea (*hint: Archaea is a kindgom*).
+
+:::::::::::::::  solution
+
+### Solution
+
+```{r}
+gpa <- subset_taxa(GlobalPatterns, Kingdom=="Archaea")
+```
+
+Identify if the number of different Archaeal taxa is suitable for a tree
+
+```{r}
+ntaxa(gpa)
+```
+
+Visualise tree
+```{r}
+plot_tree(
+  gpa,
+  nodelabf = nodeplotboot(80, 0, 3),
+  color = "SampleTypeOrigin",
+  label.tips = "taxa_names",
+  ladderize = "left"
+) + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 ---
@@ -270,5 +573,7 @@ p + geom_point(size=5, alpha=0.7)
 - Bespoke often domain specific data classes are often built to serve a specific set of data, however by utilising fundamental R principals such as S4 class structures transferring formats between packages for analysis is much easier.
 - Look for widely accepted data classes in your field before formatting your data for a specific package early on.
 - Packages that generate [*ggplot2*](https://ggplot2.tidyverse.org/) compatible figures allow for *easier* manipulations and customise using familar syntax
+- Get feedback early on from preliminary analysis, this will help you improve your data and reporting for generating downstream analysis and figures.
+- Get comfortabe with the data lifecycle and **re**-producing analysis and figures!
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -55,21 +55,39 @@ You will also need to install the following packages that will be used throughou
 
 
 ```r
-install.packages(c("BiocManager", "remotes", "knitr"))
-BiocManager::install(c(
-  "S4Vectors", "Biostrings", "BSgenome",
-  "BSgenome.Hsapiens.UCSC.hg38.masked",
-  "GenomicRanges", "rtracklayer", "biomaRt",
-  "microbiome"))
+# Install your CRAN packages
+install.packages(c(
+  "BiocManager",
+  "remotes",
+  "knitr",
+  "dplyr",
+  "ggplot2",
+  "DT",
+  "ggpubr"
+))
+
+# Install bioconductor packages
+BiocManager::install(
+  c(
+    "S4Vectors",
+    "Biostrings",
+    "BSgenome",
+    "BSgenome.Hsapiens.UCSC.hg38.masked",
+    "GenomicRanges",
+    "rtracklayer",
+    "biomaRt",
+    "microbiome",
+    "phyloseq"
+  )
+)
+
+# Install packages from github
+remotes::install_git("https://codeberg.org/hrbrmstr/hrbrthemes.git")
 ```
-
-
-
-This lesson has been made on the [lesson-intro-r-bioconductor](https://carpentries-incubator.github.io/bioc-intro/index.html)
 
 ---
 
-This is a new lesson built with [The Carpentries Workbench][workbench]. 
+This lesson has been made on the [lesson-intro-r-bioconductor](https://carpentries-incubator.github.io/bioc-intro/index.html) and built with [The Carpentries Workbench][workbench]. 
 
 [workbench]: https://carpentries.github.io/sandpaper-docs
 

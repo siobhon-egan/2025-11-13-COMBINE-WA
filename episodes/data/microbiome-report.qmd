@@ -1,0 +1,243 @@
+---
+title: "Microbiome data report for Supervisor meeting"
+author: "Siobhon Egan"
+date: "2025-11-13"
+execute:
+  message: false
+  warning: false
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+The following datasets and analysis have been used from tutorials available in the [microbiome package](), for [heatmaps](https://microbiome.github.io/tutorials/Heatmap.html)
+
+
+```{r}
+#| message: false
+#| warning: false
+#| include: false
+#Load packages and data
+library(microbiome) # Load libraries
+library(phyloseq)
+library(dplyr)
+library(reshape2)
+library(knitr)
+library(gtsummary)
+library(DT)
+
+# Load in data - apply any sub-setting and transformations
+data(peerj32)
+pseq <- peerj32$phyloseq    # Rename data
+
+# Pick data subset (DI samples from Phylum Bacteroidetes)
+pseq2 <- pseq %>%
+         subset_taxa(Phylum == "Bacteroidetes") %>%
+         subset_samples(group == "LGG")
+
+# Z transformed abundance data
+pseqz <- microbiome::transform(pseq2, "Z")
+```
+
+## Information
+
+Prepare a summary table of the participants in your dataset
+```{r}
+pseq@sam_data %>%
+  group_by(group, sex, time) %>%
+  summarise(n = n())
+pseq@sam_data %>%
+  group_by(group, sex) %>%
+  summarise(n = n())
+```
+
+### Sequencing depth
+
+This will give you an overview of the number of reads per sample and per OTU. Important to know the ‘depth’ of sequencing. Generally for amplicon 16S microbiome you want many 10’s of thousands of (good reads) per sample. The more complex the sample the more reads you need (but there is a very large variation in studies and not set rule).
+
+
+
+```{r}
+readsumsdf = data.frame(nreads = sort(taxa_sums(pseq), TRUE), sorted = 1:ntaxa(pseq), 
+    type = "OTUs")
+readsumsdf = rbind(readsumsdf, data.frame(nreads = sort(sample_sums(pseq), 
+    TRUE), sorted = 1:nsamples(pseq), type = "Samples"))
+title = "Total number of reads"
+nreads = ggplot(readsumsdf, aes(x = sorted, y = nreads)) + geom_bar(stat = "identity")
+nreads = nreads + ggtitle(title) + scale_y_log10() + facet_wrap(~type, 1, scales = "free")
+nreads
+```
+
+
+## Alpha diversity
+
+```{r}
+tab <-microbiome::alpha(pseq, index = "all")
+kable(head(tab))
+```
+
+```{r, message=FALSE, echo=F}
+# display the linelist data as a table
+DT::datatable(head(tab, 50), rownames = FALSE, filter="top", options = list(pageLength = 10, scrollX=T), class = 'white-space: nowrap' )
+```
+
+Shannon alpha diversity measure by sex
+```{r}
+p.shannon <- boxplot_alpha(pseq, 
+                           index = "shannon",
+                           x_var = "sex",
+                           fill.colors = c(female="cyan4", male="deeppink4"))
+
+p.shannon <- p.shannon + theme_minimal() + 
+  labs(x="Sex", y="Shannon diversity") +
+  theme(axis.text = element_text(size=12),
+        axis.title = element_text(size=16),
+        legend.text = element_text(size=12),
+        legend.title = element_text(size=16))
+p.shannon
+```
+
+**Testing differences in alpha diversity** 
+Using the non-parametric Kolmogorov-Smirnov test for two-group comparisons when there are no relevant covariates.
+
+```{r}
+# Construct the data
+d <- meta(pseq)
+d$diversity <- microbiome::diversity(pseq, "shannon")$shannon
+# Split the values by group
+spl <- split(d$diversity, d$sex)
+# Kolmogorov-Smironv test
+pv <- ks.test(spl$female, spl$male)$p.value
+# Adjust the p-value
+padj <- p.adjust(pv)
+padj
+```
+
+## Composition
+
+```{r}
+
+ps1.saliva <- subset_samples(ps1, group == "Placebo")
+total_samples <- phyloseq::nsamples(ps1.saliva)
+
+ps1.saliva.pruned <- prune_taxa(taxa_sums(ps1.saliva) >0, ps1.saliva)
+
+# merge all taxa that are detected rare
+pseq.fam <- aggregate_rare(ps1.saliva.pruned, level="Family", detection = 50, prevalence = 25/total_samples)
+
+# Remove the "f__" before the family names
+taxa_names(pseq.fam) <- gsub("f__", "", taxa_names(pseq.fam) )
+
+p.fam <- plot_composition(pseq.fam, sample.sort = NULL,
+                          otu.sort = NULL,
+                          plot.type = "barplot",
+                          verbose = FALSE) +
+  xlab("Animal secretion samples") +
+  theme_bw() + 
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x=element_blank()) +
+  scale_fill_brewer("Family", palette = "Paired")
+
+p.fam
+```
+
+
+## Beta diversity
+
+## Heatmap of abundance
+
+Abundance of microbial taxa (using the Z transformed data)
+
+```{r}
+# Plot the abundances heatmap, round values to 2 decimals
+dfm <- melt(round(abundances(pseqz), 1))
+
+colnames(dfm) <- c("Taxa", "Sample", "value")
+
+heat(dfm, "Taxa", "Sample", "value") +
+  theme(text=element_text(size=10), 
+        axis.text.x = element_text(angle = 90, hjust = 1),
+        legend.key.size = unit(1.2, "cm"))
+```
+
+## Correlation between microbes and lipids
+
+Cross-correlate columns of two data sets from related to microbiome and blood serum lipids associations ([PeerJ 1:e32](https://peerj.com/articles/32/)).
+
+The function returns correlations, raw p-values, and fdr estimates (not strictly proper as the comparisons are not independent). Keep only those elements that have at least only one significant correlation (n.signif):
+
+```{r}
+# Load example data 
+otu <- peerj32$microbes 
+lipids <- peerj32$lipids 
+
+# Define data sets to cross-correlate
+x <- log10(otu) # OTU Log10 (44 samples x 130 genera)
+y <- as.matrix(lipids) # Lipids (44 samples x 389 lipids)
+
+# Cross correlate data sets
+correlations <- associate(x, y, method = "spearman", mode = "matrix", p.adj.threshold = 0.05, n.signif = 1)
+
+# Or, alternatively, the same output is also available in a handy table format
+correlation.table <- associate(x, y, method = "spearman", mode = "table", p.adj.threshold = 0.05, n.signif = 1)
+
+kable(head(correlation.table))
+```
+
+### Association heatmaps
+
+Rearrange the data and plot the heatmap and mark significant correlations with stars to reproduce microbiota-lipidome heatmap from [Lahti et al. PeerJ (2013)](https://peerj.com/articles/32/) (the ordering of rows and columns may be different):
+
+```{r}
+p <- heat(correlation.table, "X1", "X2", 
+          fill = "Correlation", 
+          star = "p.adj", 
+          p.adj.threshold = 0.05) 
+p + theme(text=element_text(size=10), 
+          axis.text.x = element_text(angle = 90, hjust = 1), 
+          legend.key.size = unit(1.3, "cm"))
+```
+
+### Heatmap of significant correlations
+
+This time we are modifying the plot to only include significant correlations with a threshold of P < 0.05. The cells marked with a white cross indicate most significant correlations with a significance of P < 0.02. 
+
+```{r}
+# Order the rows and columns with levels argument if needed:
+correlation.table$X1 <- factor(correlation.table$X1, levels = unique(as.character(correlation.table$X1)))
+correlation.table$X2 <- factor(correlation.table$X2, levels = unique(as.character(correlation.table$X2)))
+
+# Set black-and-white theme
+library(ggplot2)
+theme_set(theme_bw())
+
+# Pick only the correlations with p.adj<0.05
+# Note: this will leave other cells empty
+library(dplyr)
+subtable <- filter(correlation.table, p.adj < 0.05)
+
+# Arrange the figure
+p <- ggplot(subtable, aes(x = X1, y = X2, fill = Correlation))
+p <- p + geom_tile() 
+p <- p + scale_fill_gradientn("Correlation", 
+                       breaks = seq(from = -1, to = 1, by = 0.2), 
+                   colours = c("darkblue", "blue", "white", "red", "darkred"), 
+                   limits = c(-1,1)) 
+
+# Polish texts
+p <- p + theme(axis.text.x=element_text(angle = 90, hjust=1, face = "italic"),
+               axis.text.y=element_text(size = 8))
+p <- p + xlab("") + ylab("")
+
+# Mark the most significant cells with stars using threshold of P < 0.02
+p <- p + geom_text(data = subset(correlation.table, p.adj < 0.02), 
+               aes(x = X1, y = X2, label = "+"), col = "white", size = 5)
+
+# Plot
+print(p)
+```
+
+```{r}
+sessionInfo()
+```

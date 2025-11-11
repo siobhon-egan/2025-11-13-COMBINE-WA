@@ -7,39 +7,39 @@ exercises: "10"
 
 In this exercise we will cover some aspects relevant to communicating and most importantly **re**producing analysis.
 
-We will use the libraries and data we covered in the previous episode [Application for microbiome data](https://siobhonlegan.com/2025-11-13-COMBINE-WA/10-application-microbiome.html).
+We will use the libraries and data we covered in the previous episode [Application for microbiome data](https://siobhonlegan.com/2025-11-13-COMBINE-WA-afternoon/06-application-microbiome.html).
 
 ## Why the emphasis on reproducible analysis
 
-[![Data lifecycle](images/clipboard-464455724.png)](https://r4ds.had.co.nz/introduction.html)
+[![Data lifecycle](fig/clipboard-464455724.png)](https://r4ds.had.co.nz/introduction.html)
 
 Research is rarely a straight line. Imagine this common scenario:
 
-- A research student runs a preliminary analysis and shares results with their supervisor for feedback.
-- The supervisor suggests changes—perhaps a different filtering threshold, an alternative normalization method, or adding new samples.
-- The student now needs to reanalyse the data, often weeks later. Without a clear record of the original steps, this can mean starting from scratch, risking inconsistencies and wasted time.
+-   A research student runs a preliminary analysis and shares results with their supervisor for feedback.
+-   The supervisor suggests changes—perhaps a different filtering threshold, an alternative normalization method, or adding new samples.
+-   The student now needs to reanalyse the data, often weeks later. Without a clear record of the original steps, this can mean starting from scratch, risking inconsistencies and wasted time.
 
 The same challenge applies to research staff working in teams. When multiple people collaborate on a project, unclear workflows can lead to:
 
-- Confusion about which version of the analysis is current.
-- Difficulty reproducing figures or tables for publications.
-- Problems when revisiting the project months or years later.
+-   Confusion about which version of the analysis is current.
+-   Difficulty reproducing figures or tables for publications.
+-   Problems when revisiting the project months or years later.
 
 **Reproducibility = Transparency + Efficiency**
 
 Reproducible analysis ensures that:
 
-- Every step of your workflow is documented.
-- Analyses can be rerun easily after updates or corrections.
-- Collaborators (and future you!) can understand and verify your work.
+-   Every step of your workflow is documented.
+-   Analyses can be rerun easily after updates or corrections.
+-   Collaborators (and future you!) can understand and verify your work.
 
 **Our Approach in This Workshop**
 
 For this exercise, we will use R Markdown and Quarto notebooks—powerful tools for reproducible research. These allow you to:
 
-- Combine code, results, and narrative in one document.
-- Automatically regenerate outputs when data or code changes.
-- Share complete, executable workflows with colleagues or supervisors.
+-   Combine code, results, and narrative in one document.
+-   Automatically regenerate outputs when data or code changes.
+-   Share complete, executable workflows with colleagues or supervisors.
 
 ## Load packages
 
@@ -72,58 +72,121 @@ You can quickly load the `.rda` file back in
 load("data/peerj32.rda")
 ```
 
-
 ## Making reproducible and easy to share reports
 
 Next you will download a have prepared a `.qmd` file and then work through the code chunks and "knit" the document to a reproducible a `.html` file for communication.
 
 ::: callout
-
 ### The Situation - Sharing Results
 
 Imagine you need to give your supervisors a summary of your findings early on, instead of spending weeks neatly formatting and exporting plots one by one in R you may like to share this html file early in your analysis to get some general feedback and direction before find tuning your analysis.
-
 :::
 
 It is best practice to not re-install the packages each time when making these reports, so ensure you have the required packages installed prior to running.
 
 ```{r eval=FALSE}
-# Install your CRAN packages for the qmd
-install.packages("gtsummary")
-install.packages("reshape2")
-install.packages("knitr")
-install.packages("dplyr")
-install.packages("DT")
+# Install your CRAN packages
+install.packages(c(
+  "BiocManager",
+  "remotes",
+  "knitr",
+  "dplyr",
+  "ggplot2",
+  "DT",
+  "ggpubr"
+))
 
-## install your Bioconductor packages
+# Install hrbrthemes from github
+remotes::install_git("https://codeberg.org/hrbrmstr/hrbrthemes.git")
+
+# Install your Bioconductor packages
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("microbiome")
-BiocManager::install("phyloseq")
+BiocManager::install(
+  c("microbiome",
+    "phyloseq"
+  )
+)
 ```
 
-Download the `.qmd` file
+Download the `.qmd` file using the R code or go [here](https://github.com/siobhon-egan/2025-11-13-COMBINE-WA-afternoon/blob/main/episodes/files/microbiome-data-report.qmd) click the "Download raw file" button.
 
 ```{r eval=FALSE, include=TRUE}
+# create a directory called files
+dir.create("files", showWarnings = FALSE)
+# load the qmd into this directory
 download.file(
   url = "https://raw.githubusercontent.com/siobhon-egan/2025-11-13-COMBINE-WA/refs/heads/main/episodes/files/microbiome-data-report.qmd",
-  destfile = "data/microbiome-report.qmd"
+  destfile = "files/microbiome-report.qmd"
 )
 ```
 
 Have a go at rendering the `.qmd` file.
 
 ::: challenge
-
 ### Challenge
 
 Practical opening and "knitting" the `.qmd` file to html output.
 :::
 
-```{r, echo=FALSE, results='asis'}
-htmltools::includeHTML("files/microbiome-data-report.html")
+
+>You view the rendered html by clicking [here](https://siobhonlegan.com/2025-11-13-COMBINE-WA-afternoon/files/microbiome-data-report.html)
+
+::: callout
+### When the code looks clean!
+
+In the example on the html document in the heading **Plot taxa prevalence** it is a very simple line of code from the [*Microbiome*](https://www.bioconductor.org/packages/release/bioc/html/microbiome.html) package that generates this figure. The `plot_taxa_prevalence()` does the heavy lifting largely due to the uniform data class structure of the phyloseq object
+:::
+
+## Improving your report aesthetics
+
+There are simple strategies you can apply to make your reports more professional, easier to understand, and fully reproducible. These tips apply to both R Markdown (`.Rmd`) and Quarto (`.qmd`) notebooks.
+
+**1. Hide the code**
+
+If you want readers to focus on results rather than code (you may want to also hide warning messages too):
+
+-   *R Markdown*
+
+Add in YAML header:
+
+```         
+output: 
+  html_document:    
+    code_folding: hide
 ```
+
+-   *Quarto*:
+
+Add in YAML header:
+
+```         
+code-fold: true
+```
+
+**2. Set global parameters for rendering figures**
+
+Define consistent themes and figure sizes globally: In a setup chunk
+
+```r
+knitr::opts_chunk$set(fig.width = 7, fig.height = 5) # set figure sizes
+library(ggplot2) # load libraru
+theme_set(theme_bw())  # Apply theme to all ggplot
+```
+
+**3. Make your code easy to read**
+
+Use RStudio’s built-in code formatting. This automatically indents and spaces your code for better readability. Highlight the code you want to format and press:
+
+-   `CONTROL + SHIFT + A` for windows
+-   `COMMAND + SHIFT + A` for mac
+
+**4. Use Meaningful Chunk Names**
+
+Instead of `unnamed-chunk-1`, use descriptive names. This makes debugging and navigation easier. 
+
+Add chunks names in the the curly brackets of your R chunks. For example: `{r data-cleaning}`
 
 ## Session info
 
@@ -142,20 +205,12 @@ Some other similar handy functions include:
 -   `devtools::session_info()` - more detailed, especially for package dependencies, and identifies where packages were installed from.
 -   `renv::snapshot()` – for managing project-specific environments.
 
-## Recommendations
-
-Some recommendations for rendering your `.qmd`:
-
--   Hide warnings and messages from your R chunks
--   Keeping your code in the output can be good to see what data was used for analysis and if any filtering or transformations were used, however it is not always neccessary and can make it difficult for other "non-coders" to read. In the "YAML" at the top you will see the option `code-fold: true` is used to allow us to toggle the code on and off.
--   Include the `sessionInfo()` at the bottom of your file to keep track of package versions used!
 
 ------------------------------------------------------------------------
 
 ::: keypoints
-
 -   Saving your data in `.rda` format can make it easier to load and repeat data analysis.
 -   A notebook in `.rmd` or `.qmd` format and knitted to html can be an efficient way to store and share data workflows and analysis
 -   Use `sessionInfo()` when using R to generate reports as a handy way to track package versions used to generate analysis and figures.
-
+- Tips for figures: [*ggpubr*](https://rpkgs.datanovia.com/ggpubr/) package for multipanel figures, consider consistent aesthetics, colouring and themes across figures
 :::
