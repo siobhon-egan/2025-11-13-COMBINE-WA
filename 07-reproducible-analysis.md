@@ -1,14 +1,45 @@
 ---
 source: Rmd
-title: Reproducible analysis
+title: Communicating & Reproducing Analysis
 teaching: "10"
-exercises: "0"
+exercises: "10"
 ---
 
-In this exercise we will cover some aspects relevant to generating and most importantly **re-generating** analysis.
+In this exercise we will cover some aspects relevant to communicating and most importantly **re**producing analysis.
 
 We will use the libraries and data we covered in the previous episode [Application for microbiome data](https://siobhonlegan.com/2025-11-13-COMBINE-WA/10-application-microbiome.html).
 
+## Why the emphasis on reproducible analysis
+
+[![Data lifecycle](images/clipboard-464455724.png)](https://r4ds.had.co.nz/introduction.html)
+
+Research is rarely a straight line. Imagine this common scenario:
+
+- A research student runs a preliminary analysis and shares results with their supervisor for feedback.
+- The supervisor suggests changes—perhaps a different filtering threshold, an alternative normalization method, or adding new samples.
+- The student now needs to reanalyse the data, often weeks later. Without a clear record of the original steps, this can mean starting from scratch, risking inconsistencies and wasted time.
+
+The same challenge applies to research staff working in teams. When multiple people collaborate on a project, unclear workflows can lead to:
+
+- Confusion about which version of the analysis is current.
+- Difficulty reproducing figures or tables for publications.
+- Problems when revisiting the project months or years later.
+
+**Reproducibility = Transparency + Efficiency**
+
+Reproducible analysis ensures that:
+
+- Every step of your workflow is documented.
+- Analyses can be rerun easily after updates or corrections.
+- Collaborators (and future you!) can understand and verify your work.
+
+**Our Approach in This Workshop**
+
+For this exercise, we will use R Markdown and Quarto notebooks—powerful tools for reproducible research. These allow you to:
+
+- Combine code, results, and narrative in one document.
+- Automatically regenerate outputs when data or code changes.
+- Share complete, executable workflows with colleagues or supervisors.
 
 ## Load packages
 
@@ -44,20 +75,18 @@ You can quickly load the `.rda` file back in
 load("data/peerj32.rda")
 ```
 
-....
 
 ## Making reproducible and easy to share reports
 
-Next I have prepared a `.qmd` file that you will download and then "knit" to reproducible a `.html` file. 
+Next you will download a have prepared a `.qmd` file and then work through the code chunks and "knit" the document to a reproducible a `.html` file for communication.
 
-
-:::::::::::::::::::::::::::::::::::::::: callout
+::: callout
 
 ### The Situation - Sharing Results
 
 Imagine you need to give your supervisors a summary of your findings early on, instead of spending weeks neatly formatting and exporting plots one by one in R you may like to share this html file early in your analysis to get some general feedback and direction before find tuning your analysis.
 
-::::::::::::::::::::::::::::::::::::::::::::::::::
+:::
 
 It is best practice to not re-install the packages each time when making these reports, so ensure you have the required packages installed prior to running.
 
@@ -90,14 +119,12 @@ download.file(
 
 Have a go at rendering the `.qmd` file.
 
-
-:::::::::::::::::::::::::::::::::::::::  challenge
+::: challenge
 
 ### Challenge
 
 Practical opening and "knitting" the `.qmd` file to html output.
-
-::::::::::::::::::::::::::::::::::::::::::::::::::
+:::
 
 
 ``` warning
@@ -922,10 +949,9 @@ loaded via a namespace (and not attached):
 
 When sharing R Markdown (.Rmd) or Quarto (.qmd) notebooks, it's good practice to include information about your R session at the end of the document. This helps others (and future you!) understand:
 
-- Which version of R was used
-- What packages were loaded
-- What platform the code was run on
-
+-   Which version of R was used
+-   What packages were loaded
+-   What platform the code was run on
 
 
 ``` r
@@ -983,27 +1009,25 @@ loaded via a namespace (and not attached):
 [70] Rhdf5lib_1.32.0     plyr_1.8.9         
 ```
 
-
 Some other similar handy functions include:
 
-- `devtools::session_info()` - more detailed, especially for package dependencies, and identifies where packages were installed from.
-- `renv::snapshot()` – for managing project-specific environments.
-
+-   `devtools::session_info()` - more detailed, especially for package dependencies, and identifies where packages were installed from.
+-   `renv::snapshot()` – for managing project-specific environments.
 
 ## Recommendations
 
 Some recommendations for rendering your `.qmd`:
 
-- Hide warnings and messages from your R chunks
-- Keeping your code in the output can be good to see what data was used for analysis and if any filtering or transformations were used, however it is not always neccessary and can make it difficult for other "non-coders" to read. In the "YAML" at the top you will see the option `code-fold: true` is used to allow us to toggle the code on and off.
-- Include the `sessionInfo()` at the bottom of your file to keep track of package versions used!
+-   Hide warnings and messages from your R chunks
+-   Keeping your code in the output can be good to see what data was used for analysis and if any filtering or transformations were used, however it is not always neccessary and can make it difficult for other "non-coders" to read. In the "YAML" at the top you will see the option `code-fold: true` is used to allow us to toggle the code on and off.
+-   Include the `sessionInfo()` at the bottom of your file to keep track of package versions used!
 
----
+------------------------------------------------------------------------
 
-:::::::::::::::::::::::::::::::::::::::: keypoints
+::: keypoints
 
-- Saving your data in `.rda` format can make it easier to load and repeat data analysis.
-- A notebook in `.rmd` or `.qmd` format and knitted to html can be an efficient way to store and share data workflows and analysis
-- Use `sessionInfo()` when using R to generate reports as a handy way to track package versions used to generate analysis and figures.
+-   Saving your data in `.rda` format can make it easier to load and repeat data analysis.
+-   A notebook in `.rmd` or `.qmd` format and knitted to html can be an efficient way to store and share data workflows and analysis
+-   Use `sessionInfo()` when using R to generate reports as a handy way to track package versions used to generate analysis and figures.
 
-::::::::::::::::::::::::::::::::::::::::::::::::::
+:::

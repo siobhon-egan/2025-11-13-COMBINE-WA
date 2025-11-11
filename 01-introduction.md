@@ -1,6 +1,6 @@
 ---
 source: Rmd
-title: Introduction and setup
+title: Introduction
 teaching: 5
 exercises: 5
 ---
@@ -11,6 +11,7 @@ exercises: 5
 
 - Ensure that participants are using the correct version of R to reproduce exactly the contents of this lesson.
 - Download the example files for this lesson.
+- Provide overview of lesson and structure
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -84,8 +85,24 @@ Ideally, participants might want to create a new [RStudio project][external-rstu
 Using an RStudio project sets the working directory to the root directory of that project.
 As a consequence, code is executed relative to that root directory, often avoiding the need for using absolute file paths to import/export data from/to files.
 
-
 ::::::::::::::::::::::::::::::::::::::::::::::::::
+
+## Structure of lesson
+
+The content in this lesson has been heavily influenced from the material in the Carpentries Incubator lesson [The Bioconductor project](https://carpentries-incubator.github.io/bioc-project/). 
+
+The first three lessons have been restructured from episodes with additional material added to provide some practice with storing biological data sets, visualization, reproducible workflow and communicating results.
+
+- **Part A - Bioconductor episodes** - a revised and reduced content from the Carpentries Incubator lesson [The Bioconductor project](https://carpentries-incubator.github.io/bioc-project/). 
+  - Introduce, install and getting help with bioconductor
+  - Working with biological sequences
+  - Reproducible annotations
+  - Storing and organsing data using the s4 data-class and an example with `summarizedexperiment`
+- **Part B - application with biological data** - work through an example data set and packages from bioconductor for the storage, structure, and visualization of datasets
+- **Part C - reproducibility & communication** - a workflow using principals described in previous lessons to work through some practices for reproducible workflows and strategies for communicating and sharing results. 
+
+
+Material in the first three lessons has been trimmed down, and we direct you to the full lesson material available in [The Bioconductor project](https://carpentries-incubator.github.io/bioc-project/). Note that the [Genomic ranges](https://carpentries-incubator.github.io/bioc-project/07-genomic-ranges.html) episode has been removed from content presented here.
 
 [external-rstudio-project]: https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects
 

@@ -52,6 +52,23 @@ pseq@sam_data %>%
   summarise(n = n())
 ```
 
+### Sequencing depth
+
+This will give you an overview of the number of reads per sample and per OTU. Important to know the ‘depth’ of sequencing. Generally for amplicon 16S microbiome you want many 10’s of thousands of (good reads) per sample. The more complex the sample the more reads you need (but there is a very large variation in studies and not set rule).
+
+
+
+```{r}
+readsumsdf = data.frame(nreads = sort(taxa_sums(pseq), TRUE), sorted = 1:ntaxa(pseq), 
+    type = "OTUs")
+readsumsdf = rbind(readsumsdf, data.frame(nreads = sort(sample_sums(pseq), 
+    TRUE), sorted = 1:nsamples(pseq), type = "Samples"))
+title = "Total number of reads"
+nreads = ggplot(readsumsdf, aes(x = sorted, y = nreads)) + geom_bar(stat = "identity")
+nreads = nreads + ggtitle(title) + scale_y_log10() + facet_wrap(~type, 1, scales = "free")
+nreads
+```
+
 
 ## Alpha diversity
 

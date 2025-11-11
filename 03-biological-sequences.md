@@ -1,6 +1,6 @@
 ---
 source: Rmd
-title: Working with biological sequences
+title: Biological sequences
 teaching: 5
 exercises: 5
 ---
@@ -11,6 +11,8 @@ exercises: 5
 
 - Explain how biological sequences are represented in the Bioconductor project.
 - Identify Bioconductor packages and methods available to process biological sequences.
+- Explain how gene annotations are managed in the Bioconductor project.
+- Identify Bioconductor packages and methods available to fetch and use gene annotations.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
