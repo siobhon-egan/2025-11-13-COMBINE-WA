@@ -1,4 +1,5 @@
 dir.create("data", showWarnings = FALSE)
+dir.create("files", showWarnings = FALSE)
 
 download.file(
     url = "https://raw.githubusercontent.com/Bioconductor/bioconductor-teaching/master/data/TrimmomaticAdapters/TruSeq3-PE-2.fa",
@@ -23,4 +24,8 @@ download.file(
 download.file(
   url = "https://raw.githubusercontent.com/Bioconductor/bioconductor-teaching/devel/data/SummarizedExperiment/sample_metadata.csv",
   destfile = "data/sample_metadata.csv"
+)
+download.file(
+  url = "https://raw.githubusercontent.com/siobhon-egan/2025-11-13-COMBINE-WA/refs/heads/main/episodes/files/microbiome-data-report.qmd",
+  destfile = "files/microbiome-report.qmd"
 )

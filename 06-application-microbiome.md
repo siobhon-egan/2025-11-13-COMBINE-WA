@@ -140,10 +140,9 @@ phy_tree()    Phylogenetic Tree: [ 19216 tips and 19215 internal nodes ]
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
+# Working with data
 
-## Visualising data
-
-Now we will have a go at working through some data visualizations and improving asesthetics ready for publications or sharing with colleagues.
+Now we will have a go at working through some data **visualizations** and improving aesthetics ready for publications or sharing with colleagues.
 
 For this exercise we will work through using the `GlobalPatterns` data. 
 
@@ -153,92 +152,33 @@ First a re-fresh of what the sample data contains for this dataset
 
 
 ``` r
-GlobalPatterns@sam_data
+#show just the first five rows
+head(GlobalPatterns@sam_data)
 ```
 
 ``` output
-Sample Data:        [26 samples by 7 sample variables]:
-         X.SampleID  Primer Final_Barcode Barcode_truncated_plus_T
-CL3             CL3 ILBC_01        AACGCA                   TGCGTT
-CC1             CC1 ILBC_02        AACTCG                   CGAGTT
-SV1             SV1 ILBC_03        AACTGT                   ACAGTT
-M31Fcsw     M31Fcsw ILBC_04        AAGAGA                   TCTCTT
-M11Fcsw     M11Fcsw ILBC_05        AAGCTG                   CAGCTT
-M31Plmr     M31Plmr ILBC_07        AATCGT                   ACGATT
-M11Plmr     M11Plmr ILBC_08        ACACAC                   GTGTGT
-F21Plmr     F21Plmr ILBC_09        ACACAT                   ATGTGT
-M31Tong     M31Tong ILBC_10        ACACGA                   TCGTGT
-M11Tong     M11Tong ILBC_11        ACACGG                   CCGTGT
-LMEpi24M   LMEpi24M ILBC_13        ACACTG                   CAGTGT
-SLEpi20M   SLEpi20M ILBC_15        ACAGAG                   CTCTGT
-AQC1cm       AQC1cm ILBC_16        ACAGCA                   TGCTGT
-AQC4cm       AQC4cm ILBC_17        ACAGCT                   AGCTGT
-AQC7cm       AQC7cm ILBC_18        ACAGTG                   CACTGT
-NP2             NP2 ILBC_19        ACAGTT                   AACTGT
-NP3             NP3 ILBC_20        ACATCA                   TGATGT
-NP5             NP5 ILBC_21        ACATGA                   TCATGT
-TRRsed1     TRRsed1 ILBC_22        ACATGT                   ACATGT
-TRRsed2     TRRsed2 ILBC_23        ACATTC                   GAATGT
-TRRsed3     TRRsed3 ILBC_24        ACCACA                   TGTGGT
-TS28           TS28 ILBC_25        ACCAGA                   TCTGGT
-TS29           TS29 ILBC_26        ACCAGC                   GCTGGT
-Even1         Even1 ILBC_27        ACCGCA                   TGCGGT
-Even2         Even2 ILBC_28        ACCTCG                   CGAGGT
-Even3         Even3 ILBC_29        ACCTGT                   ACAGGT
-         Barcode_full_length         SampleType
-CL3              CTAGCGTGCGT               Soil
-CC1              CATCGACGAGT               Soil
-SV1              GTACGCACAGT               Soil
-M31Fcsw          TCGACATCTCT              Feces
-M11Fcsw          CGACTGCAGCT              Feces
-M31Plmr          CGAGTCACGAT               Skin
-M11Plmr          GCCATAGTGTG               Skin
-F21Plmr          GTAGACATGTG               Skin
-M31Tong          TGTGGCTCGTG             Tongue
-M11Tong          TAGACACCGTG             Tongue
-LMEpi24M         CATGAACAGTG         Freshwater
-SLEpi20M         AGCCGACTCTG         Freshwater
-AQC1cm           GACCACTGCTG Freshwater (creek)
-AQC4cm           CAAGCTAGCTG Freshwater (creek)
-AQC7cm           ATGAAGCACTG Freshwater (creek)
-NP2              TCGCGCAACTG              Ocean
-NP3              GCTAAGTGATG              Ocean
-NP5              GAACGATCATG              Ocean
-TRRsed1          CACGTGACATG Sediment (estuary)
-TRRsed2          TGCGCTGAATG Sediment (estuary)
-TRRsed3          GATGTATGTGG Sediment (estuary)
-TS28             GCATCGTCTGG              Feces
-TS29             CTAGTCGCTGG              Feces
-Even1            TGACTCTGCGG               Mock
-Even2            TCTGATCGAGG               Mock
-Even3            AGAGAGACAGG               Mock
-                                          Description
-CL3          Calhoun South Carolina Pine soil, pH 4.9
-CC1          Cedar Creek Minnesota, grassland, pH 6.1
-SV1        Sevilleta new Mexico, desert scrub, pH 8.3
-M31Fcsw       M3, Day 1, fecal swab, whole body study
-M11Fcsw      M1, Day 1, fecal swab, whole body study 
-M31Plmr       M3, Day 1, right palm, whole body study
-M11Plmr      M1, Day 1, right palm, whole body study 
-F21Plmr     F1, Day 1,  right palm, whole body study 
-M31Tong          M3, Day 1, tongue, whole body study 
-M11Tong          M1, Day 1, tongue, whole body study 
-LMEpi24M Lake Mendota Minnesota, 24 meter epilimnion 
-SLEpi20M Sparkling Lake Wisconsin, 20 meter eplimnion
-AQC1cm                   Allequash Creek, 0-1cm depth
-AQC4cm                  Allequash Creek, 3-4 cm depth
-AQC7cm                  Allequash Creek, 6-7 cm depth
-NP2            Newport Pier, CA surface water, Time 1
-NP3            Newport Pier, CA surface water, Time 2
-NP5            Newport Pier, CA surface water, Time 3
-TRRsed1                Tijuana River Reserve, depth 1
-TRRsed2                Tijuana River Reserve, depth 2
-TRRsed3                Tijuana River Reserve, depth 2
-TS28                                          Twin #1
-TS29                                          Twin #2
-Even1                                           Even1
-Even2                                           Even2
-Even3                                           Even3
+Sample Data:        [6 samples by 7 sample variables]:
+        X.SampleID  Primer Final_Barcode Barcode_truncated_plus_T
+CL3            CL3 ILBC_01        AACGCA                   TGCGTT
+CC1            CC1 ILBC_02        AACTCG                   CGAGTT
+SV1            SV1 ILBC_03        AACTGT                   ACAGTT
+M31Fcsw    M31Fcsw ILBC_04        AAGAGA                   TCTCTT
+M11Fcsw    M11Fcsw ILBC_05        AAGCTG                   CAGCTT
+M31Plmr    M31Plmr ILBC_07        AATCGT                   ACGATT
+        Barcode_full_length SampleType
+CL3             CTAGCGTGCGT       Soil
+CC1             CATCGACGAGT       Soil
+SV1             GTACGCACAGT       Soil
+M31Fcsw         TCGACATCTCT      Feces
+M11Fcsw         CGACTGCAGCT      Feces
+M31Plmr         CGAGTCACGAT       Skin
+                                       Description
+CL3       Calhoun South Carolina Pine soil, pH 4.9
+CC1       Cedar Creek Minnesota, grassland, pH 6.1
+SV1     Sevilleta new Mexico, desert scrub, pH 8.3
+M31Fcsw    M3, Day 1, fecal swab, whole body study
+M11Fcsw   M1, Day 1, fecal swab, whole body study 
+M31Plmr    M3, Day 1, right palm, whole body study
 ```
 
 Next we often need to do some data pruning or subsetting. In this case we are making sure we remove taxa that doesn't have any sequences present.
@@ -285,7 +225,7 @@ tax_table()   Taxonomy Table:    [ 18988 taxa by 7 taxonomic ranks ]
 phy_tree()    Phylogenetic Tree: [ 18988 tips and 18987 internal nodes ]
 ```
 
-### Alpha diversity plots
+## Alpha diversity plots
 
 For microbiome (or community analysis) a common strategy is to visualize the alpha diversity of samples. Essentially this is how many unique taxa were identified in each sample.
 
@@ -344,26 +284,8 @@ Now suppose we wanted to use an external variable in the plot that isn’t in th
 
 
 ``` r
-sampleData(GP)$human <- getVariable(GP, "SampleType") %in% 
+sampleData(GP)$human <- getVariable(GP, "SampleType") %in%
   c("Feces", "Mock", "Skin", "Tongue")
-```
-
-``` warning
-Warning in getVariable(GP, "SampleType"): 'getVariable' is deprecated.
-Use 'get_variable' instead.
-See help("Deprecated") and help("phyloseq-deprecated").
-```
-
-``` warning
-Warning in sampleData(`*tmp*`): 'sampleData' is deprecated.
-Use 'sample_data' instead.
-See help("Deprecated") and help("phyloseq-deprecated").
-```
-
-``` warning
-Warning in `sampleData<-`(`*tmp*`, value = new("sample_data", .Data = list(: 'sampleData<-' is deprecated.
-Use 'sample_data<-' instead.
-See help("Deprecated") and help("phyloseq-deprecated").
 ```
 
 Now tell `plot_richness` to map the new human variable on the horizontal axis, and shade the points in different color groups, according to which "`SampleType`" they belong.
@@ -437,19 +359,455 @@ We can see that the first layer is the one specifying the original points, which
 
 ``` r
 p$layers <- p$layers[-1]
-p + geom_point(size=5, alpha=0.7)
 ```
 
-<img src="fig/06-application-microbiome-rendered-unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
-
-### Phylogenetic trees
-
-[](https://joey711.github.io/phyloseq/plot_tree-examples.html)
+We can further improvde on the plots by setting the theme to something simpler.
 
 
-### Ordination plots
+``` r
+p1 + theme_bw()
+```
 
-[](https://joey711.github.io/phyloseq/plot_ordination-examples.html)
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
+
+## Updating the data & re-formatting
+
+Now we are going to get a bit more tedious with our data formatting and figures. Lets say on the plot above we want to actually order the `SampleType` on the legend by group the sample of human origin together and those of non-human together.
+
+To do this - we have to first extract out the `sam_data` as its own data frame and add in a new column with the factor in this order.
+
+
+``` r
+# Extract the sample data as a data frame
+sample_data_df <- as.data.frame(GlobalPatterns@sam_data)
+# Give it a slightly different column name `SampleTypeOrigin`
+sample_data_df$SampleTypeOrigin <- sample_data_df$SampleType
+
+# Set the order for this factor
+desired_order_levels <- c(
+  "Feces",
+  "Skin",
+  "Tongue",
+  "Mock",
+  "Freshwater",
+  "Freshwater (creek)",
+  "Ocean",
+  "Sediment (estuary)",
+  "Soil"
+)
+
+# Now we set the factor and order
+sample_data_df$SampleTypeOrigin <- factor(sample_data_df$SampleTypeOrigin, levels = desired_order_levels)
+# Re-make the `GlobalPatterns` data object with this data frame and you will see we now have 9 sample variables
+sample_data(GlobalPatterns) <- sample_data_df
+GlobalPatterns
+```
+
+``` output
+phyloseq-class experiment-level object
+otu_table()   OTU Table:         [ 19216 taxa and 26 samples ]
+sample_data() Sample Data:       [ 26 samples by 8 sample variables ]
+tax_table()   Taxonomy Table:    [ 19216 taxa by 7 taxonomic ranks ]
+phy_tree()    Phylogenetic Tree: [ 19216 tips and 19215 internal nodes ]
+```
+
+But because we remade the phyloseq object we now need to perform the same subsetting we did to generate the `GP` data object again. We also have to add in that extra `human` variable again too.
+
+
+``` r
+# Remove taxa with 0 reads
+GP <- prune_species(speciesSums(GlobalPatterns) > 0, GlobalPatterns)
+```
+
+``` warning
+Warning in prune_species(speciesSums(GlobalPatterns) > 0, GlobalPatterns): 'prune_species' is deprecated.
+Use 'prune_taxa' instead.
+See help("Deprecated") and help("phyloseq-deprecated").
+```
+
+``` warning
+Warning in speciesSums(GlobalPatterns): 'speciesSums' is deprecated.
+Use 'taxa_sums' instead.
+See help("Deprecated") and help("phyloseq-deprecated").
+```
+
+``` r
+# Add in the human variable for SampleType
+sampleData(GP)$human <- getVariable(GP, "SampleType") %in%
+  c("Feces", "Mock", "Skin", "Tongue")
+```
+
+``` warning
+Warning in getVariable(GP, "SampleType"): 'getVariable' is deprecated.
+Use 'get_variable' instead.
+See help("Deprecated") and help("phyloseq-deprecated").
+```
+
+``` warning
+Warning in sampleData(`*tmp*`): 'sampleData' is deprecated.
+Use 'sample_data' instead.
+See help("Deprecated") and help("phyloseq-deprecated").
+```
+
+``` warning
+Warning in `sampleData<-`(`*tmp*`, value = new("sample_data", .Data = list(: 'sampleData<-' is deprecated.
+Use 'sample_data<-' instead.
+See help("Deprecated") and help("phyloseq-deprecated").
+```
+
+``` r
+sample_data(GP)$human <- as.logical(sample_data(GP)$human)
+```
+
+### Remaking the alpha diversity plot
+
+Only *now* we can we remake that alpha diversity plot from before - now the change in order of the legend
+
+``` r
+p <- plot_richness(
+  GP,
+  x = "human",
+  color = "SampleTypeOrigin",
+  measures = c("Chao1", "Shannon")
+)
+p1 <- p + geom_point(size = 5, alpha = 0.7)
+p1
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-20-1.png" style="display: block; margin: auto;" />
+
+We can then apply a manual customise colour scale for our variables, grouping by colour
+
+``` r
+p1 + scale_color_manual(values = c(
+  "#9e0142",
+  "#d53e4f",
+  "#f46d43",
+  "#252525",
+  "#e6f598",
+  "#abdda4",
+  "#66c2a5",
+  "#3288bd",
+  "#5e4fa2"
+) ) + theme_bw()
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-21-1.png" style="display: block; margin: auto;" />
+
+> In collaborative research, it’s almost inevitable that you’ll need to add extra variables or create new ways to subset and view your data. Different team members—each with unique backgrounds and priorities—often request specific visualizations to highlight patterns relevant to their perspective.
+Rather than treating these requests as a burden, you can make them efficient and reproducible by following good practices.
+
+When your supervisor asks for a new grouping or your collaborator wants to see results by location instead of treatment, you can adapt quickly—without rewriting your entire analysis. This approach saves time, reduces errors, and keeps your workflow transparent.
+
+
+## Phylogenetic trees
+
+The next set of figures work through some visualization pf phylogenetic trees and incorporations of sample data for annotation, examples taken from the [phyloseq tree tutorial](https://joey711.github.io/phyloseq/plot_tree-examples.html).
+
+
+We want to plot trees, sometimes even bootstrap values, but notice that the node labels in the `GlobalPatterns` dataset are actually a bit strange. They look like they might be bootstrap values, but they sometimes have two decimals.
+
+
+``` r
+head(phy_tree(GlobalPatterns)$node.label, 10)
+```
+
+``` output
+ [1] ""          "0.858.4"   "1.000.154" "0.764.3"   "0.995.2"   "1.000.2"  
+ [7] "0.943.7"   "0.971.6"   "0.766"     "0.611"    
+```
+
+Could systematically remove the second decimal, but why not just take the first 4 characters instead?
+
+``` r
+phy_tree(GlobalPatterns)$node.label = substr(phy_tree(GlobalPatterns)$node.label, 1, 4)
+```
+
+Great, now that we're more happy with the node labels at least looking like bootstrap values, we can move on to using these along with other information about data mapped onto the tree graphic.
+
+The `GlobalPatterns` dataset has many OTUs, more than we would want to try to fit on a tree graphic
+
+``` r
+ntaxa(GlobalPatterns)
+```
+
+``` output
+[1] 19216
+```
+
+So, let's arbitrarily prune to just the first 50 OTUs in `GlobalPatterns`, and store this as `physeq`, which also happens to be the name for most main data parameters of function in the phyloseq package.
+
+
+``` r
+physeq <- prune_taxa(taxa_names(GlobalPatterns)[1:50], GlobalPatterns)
+```
+
+Now let's look at what happens with the default `plot_tree` settings.
+
+``` r
+plot_tree(physeq)
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-26-1.png" style="display: block; margin: auto;" />
+
+By default, black dots are annotated next to tips (OTUs) in the tree, one for each sample in which that OTU was observed. Some have more dots than others. Also by default, the node labels that were stored in the tree were added next to each node without any processing (although we had trimmed their length to 4 characters in the previous step).
+
+What if we want to just see the tree with no sample points next to the tips?
+
+``` r
+plot_tree(physeq, "treeonly")
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-27-1.png" style="display: block; margin: auto;" />
+And what about without the node labels either?
+
+``` r
+plot_tree(physeq, "treeonly", nodeplotblank)
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-28-1.png" style="display: block; margin: auto;" />
+We can adjust the way branches are rotated to make it look nicer using the `ladderize` parameter.
+
+``` r
+plot_tree(physeq, "treeonly", nodeplotblank, ladderize="left")
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-29-1.png" style="display: block; margin: auto;" />
+
+``` r
+plot_tree(physeq, "treeonly", nodeplotblank, ladderize=TRUE)
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-29-2.png" style="display: block; margin: auto;" />
+And what if we want to add the OTU labels next to each tip?
+
+``` r
+plot_tree(physeq, nodelabf=nodeplotblank, label.tips="taxa_names", ladderize="left")
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-30-1.png" style="display: block; margin: auto;" />
+
+Any `method` parameter argument other than `"sampledodge"` (the default) will not add dodged sample points next to the tips.
+
+``` r
+plot_tree(physeq, "anythingelse")
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-31-1.png" style="display: block; margin: auto;" />
+
+### Mapping Variables in Data
+
+In the default argument to `method`, `"sampledodge"`, a point is added next to each OTU tip in the tree for every sample in which that OTU was observed. We can then map certain aesthetic features of these points to variables in our data.
+
+#### Color
+
+Color is one of the most useful aesthetics in tree graphics when they are complicated. Color can be mapped to either taxonomic ranks or sample covariates. For instance, we can map color to the type of sample collected (environmental location).
+
+``` r
+plot_tree(physeq, nodelabf=nodeplotboot(), ladderize="left", color="SampleType")
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-32-1.png" style="display: block; margin: auto;" />
+
+**Keeping colours consistant!**
+
+Now that you are intermediate R users you would be picking up on the different colour scales used to map against the same variable. It is best practice to keep these consistent across the different types of figures. So let's regenerate the figure mapping the `SampleTypeOrigin` variable to the same set of colours we used above for the alpha diversity plot
+
+
+``` r
+plot_tree(physeq,
+  nodelabf = nodeplotboot(),
+  ladderize = "left",
+  color = "SampleTypeOrigin") + scale_color_manual(
+    values = c(
+      "#9e0142",
+      "#d53e4f",
+      "#f46d43",
+      "#252525",
+      "#e6f598",
+      "#abdda4",
+      "#66c2a5",
+      "#3288bd",
+      "#5e4fa2"
+    )
+  ) 
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-33-1.png" style="display: block; margin: auto;" />
+
+You can make this even more efficent by including the colouring of a variable in your global R chunk for the set up and then refer to it using the value - in this case `SampleTypeOriginCols`
+
+
+``` r
+SampleTypeOriginCols <- c(
+      "#9e0142",
+      "#d53e4f",
+      "#f46d43",
+      "#252525",
+      "#e6f598",
+      "#abdda4",
+      "#66c2a5",
+      "#3288bd",
+      "#5e4fa2"
+    )
+plot_tree(physeq,
+  nodelabf = nodeplotboot(),
+  ladderize = "left",
+  color = "SampleTypeOrigin") + scale_color_manual(
+    values = SampleTypeOriginCols)
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-34-1.png" style="display: block; margin: auto;" />
+
+
+We can also map color to taxonomic class.
+
+``` r
+plot_tree(physeq, nodelabf=nodeplotboot(), ladderize="left", color="Class")
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-35-1.png" style="display: block; margin: auto;" />
+This time we don't mind the differrent colours because we are mapping it against taxonomy
+
+#### Shape
+
+You can also map a variable to point shape if it has 6 or fewer categories, and this can be done even when color is also mapped. Here we map shape to taxonomic class so that we can still indicate it in the graphic while also mapping `SampleType` to point color.
+
+``` r
+plot_tree(
+  physeq,
+  nodelabf = nodeplotboot(),
+  ladderize = "left",
+  color = "SampleTypeOrigin",
+  shape = "Class"
+) + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-36-1.png" style="display: block; margin: auto;" />
+
+### Node labels
+
+One of the most common reasons to label nodes is to add confidence measures, often a bootstrap value, to the nodes of the tree. The following graphics show different ways of doing this (labels are added by default if present in your tree).
+
+``` r
+# The default
+plot_tree(physeq, color = "SampleTypeOrigin", ladderize = "left") + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-37-1.png" style="display: block; margin: auto;" />
+
+``` r
+# Special bootstrap label
+plot_tree(physeq,
+  nodelabf = nodeplotboot(),
+  color = "SampleTypeOrigin",
+  ladderize = "left") + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-37-2.png" style="display: block; margin: auto;" />
+
+``` r
+# Special bootstrap label with alternative thresholds
+plot_tree(
+  physeq,
+  nodelabf = nodeplotboot(80, 0, 3),
+  color = "SampleTypeOrigin",
+  ladderize = "left"
+) + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-37-3.png" style="display: block; margin: auto;" />
+
+### Tip labels
+
+- **label.tips** - The `label.tips` parameter controls labeling of tree tips (AKA leaves).  Default is NULL, indicating that no tip labels will be printed. If `"taxa_names"` is a special argument resulting in the OTU name (try `taxa_names` function) being labelled next to the leaves or next to the set of points that label the leaves. Alternatively, if your data object contains a `tax_table`, then one of the rank names (from `rank_names(physeq)`) can be provided, and the classification of each OTU at that rank will be labeled instead.
+- **text.size** - A positive numeric argument indicating the ggplot2 size parameter for the taxa labels. Default is `NULL`. If left as `NULL`, this function will automatically calculate a (hopefully) optimal text size given the size constraints posed by the tree itself (for a vertical tree). This argument is included mainly in case the automatically-calculated size is wrong and you want to change it. Note that this parameter is only meaningful if `label.tips` is not `NULL`
+
+
+``` r
+plot_tree(
+  physeq,
+  nodelabf = nodeplotboot(80, 0, 3),
+  color = "SampleTypeOrigin",
+  label.tips = "taxa_names",
+  ladderize = "left"
+) + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-38-1.png" style="display: block; margin: auto;" />
+
+### Radial Tree
+
+Making a radial tree is easy with ggplot2, simply recognizing that our vertically-oriented tree is a cartesian mapping of the data to a graphic -- and that a radial tree is the same mapping, but with polar coordinates instead.
+
+
+``` r
+data(esophagus)
+plot_tree(esophagus, color = "Sample", ladderize = "left") + coord_polar(theta =
+    "y")
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-39-1.png" style="display: block; margin: auto;" />
+
+The `GlobalPatterns` dataset has additional data we can map, so we will re-do some preliminary data loading/trimming to make this radial-tree example self contained, and then show the same plot as above.
+
+
+``` r
+plot_tree(
+  physeq,
+  nodelabf = nodeplotboot(60, 60, 3),
+  color = "SampleTypeOrigin",
+  shape = "Class",
+  ladderize = "left"
+) + coord_polar(theta = "y") + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-40-1.png" style="display: block; margin: auto;" />
+
+
+:::::::::::::::::::::::::::::::::::::::  challenge
+
+### More Examples with the Global Patterns dataset
+
+Try exploring more options for generating trees but subsetting specific taxa. Starting the Archaea (*hint: Archaea is a kindgom*).
+
+:::::::::::::::  solution
+
+### Solution
+
+
+``` r
+gpa <- subset_taxa(GlobalPatterns, Kingdom=="Archaea")
+```
+
+Identify if the number of different Archaeal taxa is suitable for a tree
+
+
+``` r
+ntaxa(gpa)
+```
+
+``` output
+[1] 208
+```
+
+Visualise tree
+
+``` r
+plot_tree(
+  gpa,
+  nodelabf = nodeplotboot(80, 0, 3),
+  color = "SampleTypeOrigin",
+  label.tips = "taxa_names",
+  ladderize = "left"
+) + scale_color_manual(values = SampleTypeOriginCols) 
+```
+
+<img src="fig/06-application-microbiome-rendered-unnamed-chunk-43-1.png" style="display: block; margin: auto;" />
+
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 ---
@@ -459,5 +817,7 @@ p + geom_point(size=5, alpha=0.7)
 - Bespoke often domain specific data classes are often built to serve a specific set of data, however by utilising fundamental R principals such as S4 class structures transferring formats between packages for analysis is much easier.
 - Look for widely accepted data classes in your field before formatting your data for a specific package early on.
 - Packages that generate [*ggplot2*](https://ggplot2.tidyverse.org/) compatible figures allow for *easier* manipulations and customise using familar syntax
+- Get feedback early on from preliminary analysis, this will help you improve your data and reporting for generating downstream analysis and figures.
+- Get comfortabe with the data lifecycle and **re**-producing analysis and figures!
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::

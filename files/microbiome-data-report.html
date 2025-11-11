@@ -71,6 +71,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="microbiome-data-report_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="microbiome-data-report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="microbiome-data-report_files/libs/bootstrap/bootstrap-be9206a58a27969b3ea3001da8f26fef.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="microbiome-data-report_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="microbiome-data-report_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="microbiome-data-report_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="microbiome-data-report_files/libs/datatables-binding-0.34.0/datatables.js"></script>
+<script src="microbiome-data-report_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="microbiome-data-report_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="microbiome-data-report_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="microbiome-data-report_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="microbiome-data-report_files/libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet">
+<script src="microbiome-data-report_files/libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="microbiome-data-report_files/libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet">
+<script src="microbiome-data-report_files/libs/selectize-0.12.0/selectize.min.js"></script>
+<link href="microbiome-data-report_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="microbiome-data-report_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
 
 
 </head>
@@ -112,16 +126,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>The following datasets and analysis have been used from tutorials available in the <a href="">microbiome package</a>, for <a href="https://microbiome.github.io/tutorials/Heatmap.html">heatmaps</a></p>
+<p>Load in the <code>peerj32</code> data from <a href="https://doi.org/10.7717/peerj.32">Lahti et al.&nbsp;PeerJ 1:e32, 2013</a> made available by <a href="https://microbiome.github.io/tutorials/Data.html"><em>Microbiome</em></a> package. This characterizes associations between human intestinal microbiota and blood serum lipids. Note that this data set contains an additional data matrix of lipid species.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in data - apply any sub-setting and transformations</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(peerj32)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>pseq <span class="ot">&lt;-</span> peerj32<span class="sc">$</span>phyloseq    <span class="co"># Rename data</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Transform data to compsoition instead of count</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pseq.comp <span class="ot">&lt;-</span> microbiome<span class="sc">::</span><span class="fu">transform</span>(pseq, <span class="st">"compositional"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick data subset (group LGG and taxa from Phylum Bacteroidetes)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>pseq2 <span class="ot">&lt;-</span> pseq <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         <span class="fu">subset_taxa</span>(Phylum <span class="sc">==</span> <span class="st">"Bacteroidetes"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>         <span class="fu">subset_samples</span>(group <span class="sc">==</span> <span class="st">"LGG"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Z transformed abundance data</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>pseq2z <span class="ot">&lt;-</span> microbiome<span class="sc">::</span><span class="fu">transform</span>(pseq2, <span class="st">"Z"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <section id="information" class="level2">
 <h2 class="anchored" data-anchor-id="information">Information</h2>
 <p>Prepare a summary table of the participants in your dataset</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pseq<span class="sc">@</span>sam_data <span class="sc">%&gt;%</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group, sex, time) <span class="sc">%&gt;%</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pseq<span class="sc">@</span>sam_data <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group, sex, time) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 4
@@ -139,9 +171,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pseq<span class="sc">@</span>sam_data <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group, sex) <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pseq<span class="sc">@</span>sam_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group, sex) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
@@ -154,12 +186,453 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 4 Placebo male       8</code></pre>
 </div>
 </div>
+<section id="sequencing-depth" class="level3">
+<h3 class="anchored" data-anchor-id="sequencing-depth">Sequencing depth</h3>
+<p>This will give you an overview of the number of reads per sample and per OTU. Important to know the ‘depth’ of sequencing. Generally for amplicon 16S microbiome you want many 10’s of thousands of (good reads) per sample. The more complex the sample the more reads you need (but there is a very large variation in studies and not set rule).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>readsumsdf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">nreads =</span> <span class="fu">sort</span>(<span class="fu">taxa_sums</span>(pseq), <span class="cn">TRUE</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sorted =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ntaxa</span>(pseq),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"OTUs"</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>readsumsdf <span class="ot">&lt;-</span> <span class="fu">rbind</span>(readsumsdf,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">nreads =</span> <span class="fu">sort</span>(<span class="fu">sample_sums</span>(pseq), <span class="cn">TRUE</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">sorted =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nsamples</span>(pseq),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"Samples"</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="st">"Total number of reads"</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>nreads <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(readsumsdf, <span class="fu">aes</span>(<span class="at">x =</span> sorted, <span class="at">y =</span> nreads)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>nreads <span class="ot">&lt;-</span> nreads <span class="sc">+</span> <span class="fu">ggtitle</span>(title) <span class="sc">+</span> <span class="fu">scale_y_log10</span>() <span class="sc">+</span> <span class="fu">facet_wrap</span>( <span class="sc">~</span> type, <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">"free"</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>nreads</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="microbiome-data-report_files/figure-html/readsum-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="alpha-diversity" class="level2">
 <h2 class="anchored" data-anchor-id="alpha-diversity">Alpha diversity</h2>
+<p>Generate alpha diversity measures across all indexes</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> microbiome<span class="sc">::</span><span class="fu">alpha</span>(pseq, <span class="at">index =</span> <span class="st">"all"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(tab))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 6%">
+<col style="width: 3%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">observed</th>
+<th style="text-align: right;">chao1</th>
+<th style="text-align: right;">diversity_inverse_simpson</th>
+<th style="text-align: right;">diversity_gini_simpson</th>
+<th style="text-align: right;">diversity_shannon</th>
+<th style="text-align: right;">diversity_fisher</th>
+<th style="text-align: right;">diversity_coverage</th>
+<th style="text-align: right;">evenness_camargo</th>
+<th style="text-align: right;">evenness_pielou</th>
+<th style="text-align: right;">evenness_simpson</th>
+<th style="text-align: right;">evenness_evar</th>
+<th style="text-align: right;">evenness_bulla</th>
+<th style="text-align: right;">dominance_dbp</th>
+<th style="text-align: right;">dominance_dmn</th>
+<th style="text-align: right;">dominance_absolute</th>
+<th style="text-align: right;">dominance_relative</th>
+<th style="text-align: right;">dominance_simpson</th>
+<th style="text-align: right;">dominance_core_abundance</th>
+<th style="text-align: right;">dominance_gini</th>
+<th style="text-align: right;">rarity_log_modulo_skewness</th>
+<th style="text-align: right;">rarity_low_abundance</th>
+<th style="text-align: right;">rarity_rare_abundance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">sample-1</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">95.0000</td>
+<td style="text-align: right;">17.46551</td>
+<td style="text-align: right;">0.9427443</td>
+<td style="text-align: right;">3.478264</td>
+<td style="text-align: right;">12.04902</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.3514953</td>
+<td style="text-align: right;">0.7655818</td>
+<td style="text-align: right;">0.1858033</td>
+<td style="text-align: right;">0.1572920</td>
+<td style="text-align: right;">0.4484862</td>
+<td style="text-align: right;">0.1590461</td>
+<td style="text-align: right;">0.2717916</td>
+<td style="text-align: right;">4682</td>
+<td style="text-align: right;">0.1590461</td>
+<td style="text-align: right;">0.0572557</td>
+<td style="text-align: right;">0.9694273</td>
+<td style="text-align: right;">0.7978641</td>
+<td style="text-align: right;">1.971369</td>
+<td style="text-align: right;">0.0196005</td>
+<td style="text-align: right;">0.0091039</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sample-2</td>
+<td style="text-align: right;">108</td>
+<td style="text-align: right;">108.5000</td>
+<td style="text-align: right;">23.30562</td>
+<td style="text-align: right;">0.9570919</td>
+<td style="text-align: right;">3.672656</td>
+<td style="text-align: right;">14.49906</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0.3469754</td>
+<td style="text-align: right;">0.7843984</td>
+<td style="text-align: right;">0.2157928</td>
+<td style="text-align: right;">0.1593970</td>
+<td style="text-align: right;">0.4246980</td>
+<td style="text-align: right;">0.1414969</td>
+<td style="text-align: right;">0.2035274</td>
+<td style="text-align: right;">3522</td>
+<td style="text-align: right;">0.1414969</td>
+<td style="text-align: right;">0.0429081</td>
+<td style="text-align: right;">0.9548833</td>
+<td style="text-align: right;">0.7647908</td>
+<td style="text-align: right;">2.015667</td>
+<td style="text-align: right;">0.0276807</td>
+<td style="text-align: right;">0.0228998</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sample-3</td>
+<td style="text-align: right;">117</td>
+<td style="text-align: right;">117.4286</td>
+<td style="text-align: right;">21.91588</td>
+<td style="text-align: right;">0.9543710</td>
+<td style="text-align: right;">3.610991</td>
+<td style="text-align: right;">15.83353</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.2410547</td>
+<td style="text-align: right;">0.7582652</td>
+<td style="text-align: right;">0.1873152</td>
+<td style="text-align: right;">0.1716893</td>
+<td style="text-align: right;">0.4003502</td>
+<td style="text-align: right;">0.1216132</td>
+<td style="text-align: right;">0.2086359</td>
+<td style="text-align: right;">3115</td>
+<td style="text-align: right;">0.1216132</td>
+<td style="text-align: right;">0.0456290</td>
+<td style="text-align: right;">0.9482314</td>
+<td style="text-align: right;">0.7792511</td>
+<td style="text-align: right;">2.025160</td>
+<td style="text-align: right;">0.0397829</td>
+<td style="text-align: right;">0.0251425</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sample-4</td>
+<td style="text-align: right;">107</td>
+<td style="text-align: right;">107.8571</td>
+<td style="text-align: right;">25.95743</td>
+<td style="text-align: right;">0.9614754</td>
+<td style="text-align: right;">3.659335</td>
+<td style="text-align: right;">14.26705</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.3577362</td>
+<td style="text-align: right;">0.7831092</td>
+<td style="text-align: right;">0.2425928</td>
+<td style="text-align: right;">0.1539441</td>
+<td style="text-align: right;">0.4196312</td>
+<td style="text-align: right;">0.0869413</td>
+<td style="text-align: right;">0.1638346</td>
+<td style="text-align: right;">2241</td>
+<td style="text-align: right;">0.0869413</td>
+<td style="text-align: right;">0.0385246</td>
+<td style="text-align: right;">0.9556564</td>
+<td style="text-align: right;">0.7762104</td>
+<td style="text-align: right;">2.022197</td>
+<td style="text-align: right;">0.0322005</td>
+<td style="text-align: right;">0.0159451</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sample-5</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">94.7500</td>
+<td style="text-align: right;">21.21556</td>
+<td style="text-align: right;">0.9528648</td>
+<td style="text-align: right;">3.577881</td>
+<td style="text-align: right;">12.37779</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.4420306</td>
+<td style="text-align: right;">0.7875079</td>
+<td style="text-align: right;">0.2256974</td>
+<td style="text-align: right;">0.1820768</td>
+<td style="text-align: right;">0.4562755</td>
+<td style="text-align: right;">0.1347085</td>
+<td style="text-align: right;">0.2099760</td>
+<td style="text-align: right;">3311</td>
+<td style="text-align: right;">0.1347085</td>
+<td style="text-align: right;">0.0471352</td>
+<td style="text-align: right;">0.9588673</td>
+<td style="text-align: right;">0.7855677</td>
+<td style="text-align: right;">1.987423</td>
+<td style="text-align: right;">0.0256316</td>
+<td style="text-align: right;">0.0190406</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sample-6</td>
+<td style="text-align: right;">101</td>
+<td style="text-align: right;">101.2500</td>
+<td style="text-align: right;">23.97053</td>
+<td style="text-align: right;">0.9582821</td>
+<td style="text-align: right;">3.641771</td>
+<td style="text-align: right;">13.63130</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.4876693</td>
+<td style="text-align: right;">0.7890956</td>
+<td style="text-align: right;">0.2373320</td>
+<td style="text-align: right;">0.1813731</td>
+<td style="text-align: right;">0.4340048</td>
+<td style="text-align: right;">0.1081874</td>
+<td style="text-align: right;">0.1929060</td>
+<td style="text-align: right;">2434</td>
+<td style="text-align: right;">0.1081874</td>
+<td style="text-align: right;">0.0417179</td>
+<td style="text-align: right;">0.9490621</td>
+<td style="text-align: right;">0.7761025</td>
+<td style="text-align: right;">2.018112</td>
+<td style="text-align: right;">0.0237354</td>
+<td style="text-align: right;">0.0247133</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>View raw results as a table</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-daa9e81131e656656a8a" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-daa9e81131e656656a8a">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"86\" data-max=\"124\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"86.3333333333333\" data-max=\"124.142857142857\" data-scale=\"14\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"10.0020096304239\" data-max=\"30.8745234177277\" data-scale=\"14\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.900020092266436\" data-max=\"0.96761083607769\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"3.23532163476388\" data-max=\"3.77201744261942\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"11.2398194911212\" data-max=\"17.0685696370495\" data-scale=\"14\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"5\" data-max=\"12\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.234697677250734\" data-max=\"0.546983778608718\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.707218805727114\" data-max=\"0.829771011011413\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.103113501344576\" data-max=\"0.330971147854399\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.14356348965906\" data-max=\"0.21406486578225\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.371993193248646\" data-max=\"0.503988627276459\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.068847527730776\" data-max=\"0.283327511933869\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.135551795450272\" data-max=\"0.356153219233904\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"1731\" data-max=\"9734\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.068847527730776\" data-max=\"0.283327511933869\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.03238916392231\" data-max=\"0.099979907733564\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.774193548387097\" data-max=\"0.971444479796373\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.749891434955833\" data-max=\"0.821532495355865\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"1.89895177165961\" data-max=\"2.03726428521268\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.014006431956668\" data-max=\"0.043007807149706\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.009103879339629\" data-max=\"0.104882778071567\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","data":[[94,108,117,107,94,101,105,109,106,114,97,117,103,103,89,93,124,124,108,107,90,103,104,105,98,96,95,95,91,88,93,96,86,94,99,109,97,100,88,92,102,97,102,104],[95,108.5,117.4285714285714,107.8571428571429,94.75,101.25,105,110,106.3333333333333,115,98.5,117.5,109,103.3333333333333,89.16666666666667,93.59999999999999,124,124.1428571428571,108,108.5,90.75,103,104,108,99.2,97.2,95,96,119,90,95,96,86.33333333333333,94,99.2,109,97,110,93,92.5,102.2,97.5,107,106.1428571428571],[17.46551127435802,23.30562307576189,21.91587749259672,25.95742605380983,21.21555918493082,23.97053314166757,27.92244275300441,25.50402365760056,25.21052500578607,30.22243909571048,24.49353126384445,25.965902810964,22.42834006300095,20.93611952379513,16.49793975519256,15.56000966916542,18.11521950240003,22.07886017239804,24.01104211393734,17.53010510260782,21.74451028688564,25.90719723323036,18.13007986623493,19.62898887430877,21.10885398702887,17.7544673993239,17.97206603683228,21.79343235743499,21.74749660423221,22.40982275591383,22.05552941058269,18.50488443573954,21.37689170291483,18.05910198280395,23.70309008249755,22.12933249297909,10.00200963042395,22.8590940509957,29.12546101118705,26.24498806794784,18.70372808039032,20.82894847781345,30.87452341772768,26.92200260684571],[0.9427443042295505,0.9570919002358701,0.9543709805670431,0.9614753790330752,0.95286478233813,0.9582821127052148,0.964186514451985,0.9607905006117736,0.960334027166412,0.9669120021440648,0.9591728938866351,0.9614879556747877,0.9554135528001175,0.9522356567145387,0.9393863709748813,0.9357326877513672,0.9447977983447833,0.9547078068255465,0.9583524948540428,0.9429552764146727,0.9540113809505698,0.961400687577376,0.9448430449629526,0.9490549408121148,0.9526265139445994,0.943676147669849,0.9443580945034042,0.9541146165689296,0.9540176960043579,0.9553767108784426,0.9546598958753545,0.9459602137223487,0.953220514287227,0.9446262609872734,0.9578114078578133,0.9548111087256126,0.9000200922664365,0.9562537343881989,0.965665779517931,0.9618974869635675,0.9465347231470694,0.9519898951660868,0.9676108360776894,0.9628556606800966],[3.478263880357568,3.672656193894809,3.610990864610414,3.659335381305646,3.577880687364964,3.641771443447439,3.679855167302156,3.689225526343658,3.680275568201542,3.772017442619416,3.615867708510097,3.747684445738428,3.61313519632387,3.61198783537253,3.401505737715818,3.403387808464475,3.584772091359171,3.684946795831092,3.661747948978217,3.527808179471147,3.561594011219515,3.679239833337471,3.6057653148866,3.555541891453254,3.561878539861187,3.469861538996048,3.501569037894647,3.576307631361649,3.61134374126188,3.632407995056452,3.576345041689797,3.546299897545081,3.60655854623071,3.401625723454887,3.594531381291833,3.565706615843468,3.235321634763882,3.613747019417857,3.7151642951882,3.66739826081726,3.472691654693087,3.489955231934931,3.758573241814387,3.659609790973024],[12.04901618884153,14.49905885543774,15.8335302559299,14.26704901382634,12.37779207778725,13.63130049748068,14.038103365722,14.51946874228806,14.0132021589593,15.45975401935689,12.84794847152468,16.23268114359363,13.62481701926009,13.63158229622578,11.3210138894808,11.86153725408361,16.74239420978347,17.06856963704946,14.62776188390713,14.08627602948012,11.77172065772376,13.77774299944523,13.90277707468246,13.95540982907928,12.96996209010387,12.60073143578261,11.81041329801078,12.05699652102229,11.91985281402802,11.34042024831228,12.18441687207591,12.53658471529042,11.23981949112119,11.79766766957962,12.82772183857359,14.32415994999887,12.21294898397518,13.19185697043441,11.33928510077022,11.91379053453714,13.2492030494617,12.57839638559913,13.91359738885419,14.20255221720939],[7,11,8,9,8,9,11,10,10,11,9,11,10,10,6,6,8,10,9,7,9,9,10,8,9,8,7,7,9,10,9,9,9,7,9,8,5,8,10,9,7,8,12,10],[0.3514953172408509,0.3469754053599621,0.2410547383608991,0.357736240913811,0.4420306038799771,0.4876693109794578,0.3943468665225988,0.3009581195056023,0.4619459010036576,0.3033345230131812,0.4447437212422503,0.2735245733327399,0.4704780003499113,0.4844336718646352,0.4611301601097774,0.3984560919707576,0.2346976772507342,0.252657955471802,0.4162024832043542,0.3703818828597291,0.5469837786087177,0.4681279977755637,0.3682347312156956,0.327117600427705,0.4205719324766943,0.4068756744282799,0.3938835775560362,0.3727782286657884,0.4676703278862545,0.4473134665312112,0.4122516669574647,0.3959597959004135,0.4759997283935067,0.457150206340098,0.4683735340917853,0.3019607145557152,0.3035421715380378,0.4827140424214275,0.5007883402553454,0.4782293366278515,0.4681782108816681,0.4462115512362693,0.4560767689082227,0.4168493609131551],[0.7655818182723539,0.7843983894809727,0.7582652196351934,0.7831092280372458,0.7875079339618193,0.789095632531821,0.7906932785058222,0.7863892465358343,0.7891762911299002,0.7964230138832288,0.7904035305183428,0.7869692491392773,0.7795785267056161,0.7793309694149408,0.7578038088923661,0.7508688587212442,0.7436852064697208,0.7644671261788751,0.7820686288682418,0.754961995066825,0.7914988126504716,0.793841418275216,0.7763699036515667,0.7639819903779174,0.7768601536283887,0.760209649536002,0.768920443227871,0.7853325235818337,0.8005888314731511,0.8112876349419283,0.7890273665458563,0.7769564785119157,0.8096716098594599,0.7487134087644,0.7822497559419588,0.7600601586913621,0.7072188057271146,0.7847151947637493,0.8297710110114128,0.8110503616714066,0.750856663355621,0.7628799389369665,0.8126692617562354,0.7879633455593911],[0.1858033114293406,0.2157928062570546,0.1873151922444165,0.2425927668580358,0.2256974381375619,0.2373320113036393,0.2659280262190897,0.2339818684183537,0.2378351415640195,0.2651091148746534,0.2525106315860252,0.2219307932561026,0.2177508743980675,0.2032632963475255,0.1853701096089052,0.1673119319265099,0.1460904798580647,0.1780553239709519,0.2223244640179383,0.1638327579682974,0.2416056698542849,0.2515261867303918,0.1743276910214897,0.186942751183893,0.2153964692553966,0.1849423687429573,0.1891796424929713,0.2294045511308946,0.2389834791673869,0.254657076771748,0.2371562302213192,0.1927592128722868,0.2485685081734282,0.192118106200042,0.2394251523484601,0.2030213990181568,0.1031135013445768,0.228590940509957,0.3309711478543984,0.2852716094342156,0.1833698831410815,0.2147314276063242,0.3026914060561537,0.2588654096812087],[0.1572919997890105,0.1593969530088548,0.1716893449866275,0.1539440605486844,0.1820768358222377,0.181373103872715,0.1572794076585698,0.1674879014897502,0.2003544372697673,0.1830936631114831,0.1640278751257016,0.2003809015712378,0.1648937793383241,0.1744056715872322,0.159993811340806,0.17235171236476,0.1730967494701151,0.1684720825450489,0.2140648657822494,0.1871304900518677,0.1577391949672808,0.1747760526308548,0.1856876283416742,0.1737048536162916,0.164690801447935,0.1518641736173904,0.1935577043555656,0.1696463127164101,0.1522997061810075,0.1623125965656032,0.1447041781677751,0.1708243852656383,0.1854482371103201,0.169968904317406,0.1580340284189719,0.1939829177899212,0.1599260749524828,0.1731714525380964,0.17604697315461,0.1741505500234412,0.1708714478438357,0.1734331513447388,0.1541830407461962,0.1435634896590604],[0.4484862298528637,0.4246980385884323,0.4003501587224661,0.4196312497804012,0.4562755075033455,0.4340048004267048,0.4133524485652748,0.4202840356439085,0.4262981282125883,0.4151691915952383,0.4382456940119107,0.4262173859630887,0.4151308302331529,0.4329290137673372,0.4475828043122315,0.4337347181120222,0.39991453203337,0.4119685896563591,0.4239226585641699,0.4188215324078252,0.4606778106784502,0.4432121297206232,0.449775664239548,0.4095137585991245,0.4225298451653371,0.4124116015691555,0.4527498592419723,0.4584083681751149,0.4834429201504453,0.5039886272764582,0.4483773464842505,0.4520517445633087,0.4935939304631808,0.4021173046948791,0.4238666458949994,0.3719931932486465,0.4206509901230253,0.4432027348887546,0.4985087076691019,0.484635125353688,0.3991274760950962,0.3985441141568768,0.4512090587297072,0.4238039585773772],[0.1590461308512807,0.1414969265999759,0.1216131802920278,0.0869413407821229,0.134708490988242,0.1081873944350609,0.08834888960411973,0.1174979187164157,0.09316793186446955,0.07032931335526049,0.08937059498442879,0.1017173654882616,0.1222022420323679,0.1370336250575772,0.1459603009771543,0.1703779909069791,0.1762741396834616,0.1371430915654742,0.1066417212347989,0.1646920276925273,0.1279466753373435,0.1037363179985186,0.1896257813134183,0.1520325203252033,0.1382635358670217,0.1734076992082375,0.1599989121270635,0.09704469080744951,0.1388099683415862,0.136433758513,0.1305281578110086,0.1756965652452588,0.1533513879485444,0.1442799224396263,0.1128383067314365,0.1172356485007963,0.2833275119338689,0.1208391391856325,0.06884752773077646,0.0897831665860825,0.1364196685385564,0.1110359558561766,0.08153556288271314,0.08757154157554325],[0.2717915619267613,0.2035273793740709,0.208635902240962,0.1638345747982619,0.2099759957687457,0.1929060360920971,0.1645477953009334,0.1870506319533792,0.1814478800222181,0.1393998456978113,0.172389772168497,0.1917420297798484,0.2328499827830279,0.2506525410717028,0.2626740662558306,0.2828128629741479,0.24774938289531,0.2305956678700361,0.1862403265583808,0.2696452787095853,0.2196797268736791,0.1657888239651057,0.2498173553048137,0.2482384823848238,0.22879851529089,0.251608877101291,0.238053795316707,0.1866461480481141,0.2161295559704521,0.2276780675019754,0.2216433343938912,0.2515175508049617,0.2130585646580908,0.2419354838709677,0.1923664122137405,0.1904992729035385,0.3561532192339039,0.197282861124013,0.1355517954502726,0.165098374679213,0.2519517874263799,0.2068351726593094,0.1466792275082431,0.1527150900376902],[4682,3522,3115,2241,3311,2434,2196,3105,2516,1732,2181,2227,3194,3570,4287,5134,4856,3343,2508,4615,3148,2521,4672,3927,3427,4446,5883,3090,3420,3626,3282,4660,3624,4911,3252,3386,9734,3122,1831,2414,3984,3119,1731,1882],[0.1590461308512807,0.1414969265999759,0.1216131802920278,0.0869413407821229,0.134708490988242,0.1081873944350609,0.08834888960411973,0.1174979187164157,0.09316793186446955,0.07032931335526049,0.08937059498442879,0.1017173654882616,0.1222022420323679,0.1370336250575772,0.1459603009771543,0.1703779909069791,0.1762741396834616,0.1371430915654742,0.1066417212347989,0.1646920276925273,0.1279466753373435,0.1037363179985186,0.1896257813134183,0.1520325203252033,0.1382635358670217,0.1734076992082375,0.1599989121270635,0.09704469080744951,0.1388099683415862,0.136433758513,0.1305281578110086,0.1756965652452588,0.1533513879485444,0.1442799224396263,0.1128383067314365,0.1172356485007963,0.2833275119338689,0.1208391391856325,0.06884752773077646,0.0897831665860825,0.1364196685385564,0.1110359558561766,0.08153556288271314,0.08757154157554325],[0.05725569577044957,0.04290809976412993,0.04562901943295696,0.03852462096692472,0.04713521766187002,0.04171788729478516,0.03581348554801501,0.03920949938822638,0.03966597283358795,0.03308799785593518,0.04082710611336499,0.03851204432521229,0.04458644719988245,0.04776434328546134,0.06061362902511872,0.06426731224863282,0.05520220165521666,0.04529219317445351,0.04164750514595719,0.05704472358532736,0.0459886190494302,0.03859931242262405,0.05515695503704748,0.05094505918788519,0.04737348605540063,0.05632385233015102,0.05564190549659576,0.04588538343107036,0.04598230399564211,0.04462328912155745,0.04534010412464549,0.05403978627765127,0.046779485712773,0.05537373901272662,0.04218859214218671,0.04518889127438739,0.09997990773356352,0.0437462656118011,0.03433422048206898,0.03810251303643258,0.05346527685293058,0.04801010483391317,0.03238916392231063,0.03714433931990337],[0.9694272708743801,0.9548832911494117,0.9482314359334736,0.9556564245810056,0.9588673257658975,0.949062138856787,0.9653202446089478,0.9564444108075381,0.9301610812812443,0.9257725260892515,0.9651696443206033,0.9421302639992691,0.9262730994375787,0.9458774758175956,0.8357904055020255,0.8981183420170573,0.9395237403804271,0.9411716442402364,0.9282251892167703,0.9424737706088074,0.9645992521541213,0.9499629660110278,0.9457748193846901,0.9561749903213317,0.9362946824820464,0.9224228714068413,0.9224346596317551,0.9364655632674854,0.9450442406039451,0.9421680400346164,0.9714444797963731,0.9694604682728201,0.8891333784698714,0.774193548387097,0.9602012491325469,0.9383006716986358,0.9642275002910702,0.9594751509521598,0.955442752397067,0.9519842302971696,0.9502807834543212,0.960412958348167,0.9556759302873292,0.9674282257689267],[0.797864089847236,0.7647907955609483,0.7792511306917476,0.7762104283053972,0.7855677298006114,0.7761024911616072,0.770594934515108,0.7662593366672681,0.7680176035776825,0.7511777255107734,0.7843228726690441,0.749891434955833,0.7783010233061898,0.7749796265457203,0.8103741786115535,0.8075631367603631,0.7741826853268705,0.7573388705157633,0.7700713692294592,0.785757344504038,0.7907688555957098,0.7700050011711568,0.7675217144248681,0.7879275737812304,0.791354300504624,0.804792278590007,0.7912495266706667,0.7846982482672296,0.7755149955977867,0.7710029782837111,0.7883801610416263,0.7856261184052151,0.7770422113431525,0.8215324953558643,0.787847114717346,0.7910106374478616,0.8203184753306996,0.7804691128657666,0.7637927892750209,0.7717504312922117,0.8066376576443659,0.8077191445080381,0.7544722634878038,0.7776296338717845],[1.971368738134812,2.015667069073464,2.025159597063414,2.022197439913499,1.987423306301989,2.01811192848681,1.995541846273698,2.005881266177384,2.024367084649983,2.035299293422783,2.009172647062421,2.021249989186119,2.01213035346011,2.000857532269017,1.957564180328361,1.957358886022608,2.020941082176169,2.008810978243165,2.027382223649443,2.018391922379434,1.945735455140891,1.997890370458091,1.964849022863106,2.006444810547422,2.009690551863632,2.030614276354947,1.898951771659607,1.919738379249486,1.963502752287741,1.902262846658016,1.987901366902103,1.981213450336881,1.962114947463671,1.986981147389671,2.000272561577705,2.037264285212678,1.969044311892583,1.949547717124345,1.906081228411069,1.917867188282496,2.002338651686019,2.006672940394778,1.995681664700965,2.020268622059532],[0.01960051633942523,0.02768068779880277,0.03978293120949482,0.03220049658597143,0.02563163676309044,0.02373544315050227,0.03101866752494366,0.03670627412396883,0.03958526198852064,0.04040280992406712,0.02401245697426651,0.03973691422307482,0.03833645789493822,0.03293413173652693,0.02430969323482348,0.021902897155942,0.0354653695368085,0.03265507056120775,0.03580236414661108,0.03365213046891728,0.02605267436189238,0.02308451979260966,0.03275428200340937,0.03457220286488579,0.03312353748083596,0.0254690120519521,0.02461312518697815,0.02477937250714487,0.01915739913954054,0.01745870489521014,0.02036271078587336,0.02311201598612524,0.01400643195666892,0.03196427522181091,0.03025676613462872,0.03857073609860813,0.02622540458726279,0.02887443876761108,0.02647114119195338,0.01904266002157176,0.04300780714970551,0.04065503737985048,0.02628356099858691,0.02396351961286121],[0.009103879339629084,0.02289984331686101,0.02514250019520614,0.01594506517690852,0.01904064445258169,0.02471330784958703,0.01709848728677155,0.02471051237417698,0.03847435660062948,0.03735737199009248,0.0172922471725947,0.03759020736274776,0.02743237555955169,0.02851988331030264,0.02155187089305799,0.02701357315899555,0.03277914912153312,0.02797833935018068,0.03933157581426949,0.03243879808721728,0.009104210697447712,0.01781746358324432,0.02017209189057567,0.01773132017034451,0.01763092068102945,0.01189593977924264,0.05349615164948718,0.03203416978109952,0.01189219904213012,0.01076118448282348,0.01340279987273296,0.0119518908117483,0.02881685849695315,0.1048827780715669,0.01380985426786951,0.0443875077903193,0.009954593084177454,0.02128812509676403,0.01804850535815017,0.02038159705433862,0.02064785645801936,0.01705233179067267,0.025435704192181,0.01516914057047114]],"container":"<table class=\"white-space: nowrap\">\n  <thead>\n    <tr>\n      <th>observed<\/th>\n      <th>chao1<\/th>\n      <th>diversity_inverse_simpson<\/th>\n      <th>diversity_gini_simpson<\/th>\n      <th>diversity_shannon<\/th>\n      <th>diversity_fisher<\/th>\n      <th>diversity_coverage<\/th>\n      <th>evenness_camargo<\/th>\n      <th>evenness_pielou<\/th>\n      <th>evenness_simpson<\/th>\n      <th>evenness_evar<\/th>\n      <th>evenness_bulla<\/th>\n      <th>dominance_dbp<\/th>\n      <th>dominance_dmn<\/th>\n      <th>dominance_absolute<\/th>\n      <th>dominance_relative<\/th>\n      <th>dominance_simpson<\/th>\n      <th>dominance_core_abundance<\/th>\n      <th>dominance_gini<\/th>\n      <th>rarity_log_modulo_skewness<\/th>\n      <th>rarity_low_abundance<\/th>\n      <th>rarity_rare_abundance<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]},{"name":"observed","targets":0},{"name":"chao1","targets":1},{"name":"diversity_inverse_simpson","targets":2},{"name":"diversity_gini_simpson","targets":3},{"name":"diversity_shannon","targets":4},{"name":"diversity_fisher","targets":5},{"name":"diversity_coverage","targets":6},{"name":"evenness_camargo","targets":7},{"name":"evenness_pielou","targets":8},{"name":"evenness_simpson","targets":9},{"name":"evenness_evar","targets":10},{"name":"evenness_bulla","targets":11},{"name":"dominance_dbp","targets":12},{"name":"dominance_dmn","targets":13},{"name":"dominance_absolute","targets":14},{"name":"dominance_relative","targets":15},{"name":"dominance_simpson","targets":16},{"name":"dominance_core_abundance","targets":17},{"name":"dominance_gini","targets":18},{"name":"rarity_log_modulo_skewness","targets":19},{"name":"rarity_low_abundance","targets":20},{"name":"rarity_rare_abundance","targets":21}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Shannon alpha diversity measure by sex</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p.shannon <span class="ot">&lt;-</span> <span class="fu">boxplot_alpha</span>(pseq, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">index =</span> <span class="st">"shannon"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">x_var =</span> <span class="st">"sex"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fill.colors =</span> <span class="fu">c</span>(<span class="at">female=</span><span class="st">"cyan4"</span>, <span class="at">male=</span><span class="st">"deeppink4"</span>))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Improve the figure text</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>p.shannon <span class="ot">&lt;-</span> p.shannon <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Sex"</span>, <span class="at">y=</span><span class="st">"Shannon diversity"</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>))</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>p.shannon</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="microbiome-data-report_files/figure-html/shannondiv-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Testing differences in alpha diversity</strong></p>
+<p>Using the non-parametric Kolmogorov-Smirnov test for two-group comparisons when there are no relevant covariates.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the data</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">meta</span>(pseq)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>diversity <span class="ot">&lt;-</span> microbiome<span class="sc">::</span><span class="fu">diversity</span>(pseq, <span class="st">"shannon"</span>)<span class="sc">$</span>shannon</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the values by group</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>spl <span class="ot">&lt;-</span> <span class="fu">split</span>(d<span class="sc">$</span>diversity, d<span class="sc">$</span>sex)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Kolmogorov-Smironv test</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>pv <span class="ot">&lt;-</span> <span class="fu">ks.test</span>(spl<span class="sc">$</span>female, spl<span class="sc">$</span>male)<span class="sc">$</span>p.value</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the p-value</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>padj <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(pv)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>padj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2409927</code></pre>
+</div>
+</div>
+<p>Identified no difference so reproduce using the grouping variable and do not separate out by sex</p>
+<p>Shannon alpha diversity measure by <strong>group</strong></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use a different name so we can merge the two figures back together to create a panel</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>p.shannon2 <span class="ot">&lt;-</span> <span class="fu">boxplot_alpha</span>(pseq, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">index =</span> <span class="st">"shannon"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">x_var =</span> <span class="st">"group"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fill.colors =</span> <span class="fu">c</span>(<span class="at">Placebo=</span><span class="st">"#4575b4"</span>, <span class="at">LGG=</span><span class="st">"#d73027"</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Improve the figure text</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>p.shannon2 <span class="ot">&lt;-</span> p.shannon2 <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Group"</span>, <span class="at">y=</span><span class="st">"Shannon diversity"</span>) <span class="sc">+</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>),</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>))</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>p.shannon2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="microbiome-data-report_files/figure-html/shannondiv2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Testing differences in alpha diversity</strong></p>
+<p>Using the non-parametric Kolmogorov-Smirnov test for two-group comparisons when there are no relevant covariates.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the data</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">meta</span>(pseq)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>diversity <span class="ot">&lt;-</span> microbiome<span class="sc">::</span><span class="fu">diversity</span>(pseq, <span class="st">"shannon"</span>)<span class="sc">$</span>shannon</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the values by group</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>spl <span class="ot">&lt;-</span> <span class="fu">split</span>(d<span class="sc">$</span>diversity, d<span class="sc">$</span>group)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Kolmogorov-Smironv test</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>pv <span class="ot">&lt;-</span> <span class="fu">ks.test</span>(spl<span class="sc">$</span>Placebo, spl<span class="sc">$</span>LGG)<span class="sc">$</span>p.value</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the p-value</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>padj <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(pv)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>padj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.07563744</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Still no significant difference in alpha diversity (shannon index)</p>
+</blockquote>
+<p>Make a panel figure for alpha diversity measuring showing no difference between sex or the grouping.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggpubr package for formatting multi panel figures</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>mergealpha <span class="ot">&lt;-</span> <span class="fu">ggarrange</span>(p.shannon, p.shannon2 <span class="sc">+</span> <span class="fu">rremove</span>(<span class="st">"y.title"</span>), <span class="co"># removes the duplicate y axis title</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">1</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>mergealpha</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="microbiome-data-report_files/figure-html/alpha-merged-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(mergealpha, <span class="at">file =</span> <span class="st">"alphadiv.png"</span>, <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
-<section id="beta-diversity" class="level2">
-<h2 class="anchored" data-anchor-id="beta-diversity">Beta diversity</h2>
+<section id="plot-taxa-prevalence" class="level2">
+<h2 class="anchored" data-anchor-id="plot-taxa-prevalence">Plot taxa prevalence</h2>
+<p>This function allows you to have an overview of OTU prevalences alongwith their taxonomic affiliations. This will aid in checking if you filter OTUs based on prevalence, then what taxonomic affliations will be lost.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define detection and prevalence thresholds to filter out rare taxa</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pseqcore <span class="ot">&lt;-</span> <span class="fu">core</span>(pseq, <span class="at">detection =</span> <span class="fl">0.1</span><span class="sc">/</span><span class="dv">100</span>, <span class="at">prevalence =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">100</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># For the available taxonomic levels</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>pcomcore <span class="ot">&lt;-</span> <span class="fu">plot_taxa_prevalence</span>(pseqcore, <span class="st">"Phylum"</span>, <span class="at">detection =</span> <span class="fl">0.1</span><span class="sc">/</span><span class="dv">100</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>pcomcore</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="microbiome-data-report_files/figure-html/comp-phylym-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get relative abudance</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>pseq.comp.fam <span class="ot">&lt;-</span> <span class="fu">aggregate_rare</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  pseq.comp,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">level =</span> <span class="st">"Family"</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">detection =</span> <span class="fl">0.005</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">prevalence =</span> <span class="fl">0.5</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>pcomp.fam <span class="ot">&lt;-</span> <span class="fu">plot_composition</span>(pseq.comp.fam, <span class="at">average_by =</span> <span class="st">"group"</span>) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"group"</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Relative abundance"</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Relative abundance data"</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>pcomp.fam <span class="ot">&lt;-</span> pcomp.fam <span class="sc">+</span> <span class="fu">scale_fill_brewer</span>(<span class="st">"Family"</span>, <span class="at">palette =</span> <span class="st">"Paired"</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>pcomp.fam</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="microbiome-data-report_files/figure-html/comp-aggregated-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Make a panel figure for these two displays of taxonomic composition</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggpubr package for formatting multi panel figures</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>mergecomp <span class="ot">&lt;-</span> <span class="fu">ggarrange</span>(pcomcore, pcomp.fam,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>mergecomp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="microbiome-data-report_files/figure-html/compmerge-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(mergecomp, <span class="at">file =</span> <span class="st">"comp.png"</span>, <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 <section id="heatmap-of-abundance" class="level2">
 <h2 class="anchored" data-anchor-id="heatmap-of-abundance">Heatmap of abundance</h2>
@@ -167,20 +640,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the abundances heatmap, round values to 2 decimals</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> <span class="fu">melt</span>(<span class="fu">round</span>(<span class="fu">abundances</span>(pseqz), <span class="dv">1</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(dfm) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Taxa"</span>, <span class="st">"Sample"</span>, <span class="st">"value"</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">heat</span>(dfm, <span class="st">"Taxa"</span>, <span class="st">"Sample"</span>, <span class="st">"value"</span>) <span class="sc">+</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>), </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">1.2</span>, <span class="st">"cm"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the abundances heatmap, round values to 2 decimals</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> <span class="fu">melt</span>(<span class="fu">round</span>(<span class="fu">abundances</span>(pseq2z), <span class="dv">1</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(dfm) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Taxa"</span>, <span class="st">"Sample"</span>, <span class="st">"value"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">heat</span>(dfm, <span class="st">"Taxa"</span>, <span class="st">"Sample"</span>, <span class="st">"value"</span>) <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>), </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">1.2</span>, <span class="st">"cm"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="microbiome-data-report_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="microbiome-data-report_files/figure-html/heatmap-abundance-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -193,21 +666,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load example data </span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>otu <span class="ot">&lt;-</span> peerj32<span class="sc">$</span>microbes </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>lipids <span class="ot">&lt;-</span> peerj32<span class="sc">$</span>lipids </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define data sets to cross-correlate</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">log10</span>(otu) <span class="co"># OTU Log10 (44 samples x 130 genera)</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(lipids) <span class="co"># Lipids (44 samples x 389 lipids)</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Cross correlate data sets</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>correlations <span class="ot">&lt;-</span> <span class="fu">associate</span>(x, y, <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">mode =</span> <span class="st">"matrix"</span>, <span class="at">p.adj.threshold =</span> <span class="fl">0.05</span>, <span class="at">n.signif =</span> <span class="dv">1</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Or, alternatively, the same output is also available in a handy table format</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>correlation.table <span class="ot">&lt;-</span> <span class="fu">associate</span>(x, y, <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">mode =</span> <span class="st">"table"</span>, <span class="at">p.adj.threshold =</span> <span class="fl">0.05</span>, <span class="at">n.signif =</span> <span class="dv">1</span>)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(correlation.table))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load example data </span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>otu <span class="ot">&lt;-</span> peerj32<span class="sc">$</span>microbes </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>lipids <span class="ot">&lt;-</span> peerj32<span class="sc">$</span>lipids </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define data sets to cross-correlate</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">log10</span>(otu) <span class="co"># OTU Log10 (44 samples x 130 genera)</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(lipids) <span class="co"># Lipids (44 samples x 389 lipids)</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Cross correlate data sets</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>correlations <span class="ot">&lt;-</span> <span class="fu">associate</span>(x, y, <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">mode =</span> <span class="st">"matrix"</span>, <span class="at">p.adj.threshold =</span> <span class="fl">0.05</span>, <span class="at">n.signif =</span> <span class="dv">1</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Or, alternatively, the same output is also available in a handy table format</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>correlation.table <span class="ot">&lt;-</span> <span class="fu">associate</span>(x, y, <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">mode =</span> <span class="st">"table"</span>, <span class="at">p.adj.threshold =</span> <span class="fl">0.05</span>, <span class="at">n.signif =</span> <span class="dv">1</span>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(correlation.table))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -280,18 +753,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">heat</span>(correlation.table, <span class="st">"X1"</span>, <span class="st">"X2"</span>, </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"Correlation"</span>, </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">star =</span> <span class="st">"p.adj"</span>, </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">p.adj.threshold =</span> <span class="fl">0.05</span>) </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>), </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>), </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">1.3</span>, <span class="st">"cm"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>heatmap <span class="ot">&lt;-</span> <span class="fu">heat</span>(correlation.table, <span class="st">"X1"</span>, <span class="st">"X2"</span>, </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"Correlation"</span>, </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">star =</span> <span class="st">"p.adj"</span>, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">p.adj.threshold =</span> <span class="fl">0.05</span>) </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>heatmap <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>), </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>), </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">1.3</span>, <span class="st">"cm"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="microbiome-data-report_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="microbiome-data-report_files/figure-html/associations-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -303,51 +776,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Order the rows and columns with levels argument if needed:</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>correlation.table<span class="sc">$</span>X1 <span class="ot">&lt;-</span> <span class="fu">factor</span>(correlation.table<span class="sc">$</span>X1, <span class="at">levels =</span> <span class="fu">unique</span>(<span class="fu">as.character</span>(correlation.table<span class="sc">$</span>X1)))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>correlation.table<span class="sc">$</span>X2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(correlation.table<span class="sc">$</span>X2, <span class="at">levels =</span> <span class="fu">unique</span>(<span class="fu">as.character</span>(correlation.table<span class="sc">$</span>X2)))</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Set black-and-white theme</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick only the correlations with p.adj&lt;0.05</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: this will leave other cells empty</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>subtable <span class="ot">&lt;-</span> <span class="fu">filter</span>(correlation.table, p.adj <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the figure</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(subtable, <span class="fu">aes</span>(<span class="at">x =</span> X1, <span class="at">y =</span> X2, <span class="at">fill =</span> Correlation))</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_tile</span>() </span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">scale_fill_gradientn</span>(<span class="st">"Correlation"</span>, </span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                       <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">to =</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.2</span>), </span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                   <span class="at">colours =</span> <span class="fu">c</span>(<span class="st">"darkblue"</span>, <span class="st">"blue"</span>, <span class="st">"white"</span>, <span class="st">"red"</span>, <span class="st">"darkred"</span>), </span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                   <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>)) </span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Polish texts</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">face =</span> <span class="st">"italic"</span>),</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">axis.text.y=</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>))</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">""</span>)</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Mark the most significant cells with stars using threshold of P &lt; 0.02</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(correlation.table, p.adj <span class="sc">&lt;</span> <span class="fl">0.02</span>), </span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">x =</span> X1, <span class="at">y =</span> X2, <span class="at">label =</span> <span class="st">"+"</span>), <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="dv">5</span>)</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Order the rows and columns with levels argument if needed:</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>correlation.table<span class="sc">$</span>X1 <span class="ot">&lt;-</span> <span class="fu">factor</span>(correlation.table<span class="sc">$</span>X1, <span class="at">levels =</span> <span class="fu">unique</span>(<span class="fu">as.character</span>(correlation.table<span class="sc">$</span>X1)))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>correlation.table<span class="sc">$</span>X2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(correlation.table<span class="sc">$</span>X2, <span class="at">levels =</span> <span class="fu">unique</span>(<span class="fu">as.character</span>(correlation.table<span class="sc">$</span>X2)))</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick only the correlations with p.adj&lt;0.05</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: this will leave other cells empty</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>subtable <span class="ot">&lt;-</span> <span class="fu">filter</span>(correlation.table, p.adj <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the figure</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>heatmap2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(subtable, <span class="fu">aes</span>(<span class="at">x =</span> X1, <span class="at">y =</span> X2, <span class="at">fill =</span> Correlation))</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>heatmap2 <span class="ot">&lt;-</span> heatmap2 <span class="sc">+</span> <span class="fu">geom_tile</span>() </span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>heatmap2 <span class="ot">&lt;-</span> heatmap2 <span class="sc">+</span> <span class="fu">scale_fill_gradientn</span>(<span class="st">"Correlation"</span>, </span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">to =</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.2</span>), </span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">colours =</span> <span class="fu">c</span>(<span class="st">"darkblue"</span>, <span class="st">"blue"</span>, <span class="st">"white"</span>, <span class="st">"red"</span>, <span class="st">"darkred"</span>), </span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>                   <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>)) </span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Polish texts</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>heatmap2 <span class="ot">&lt;-</span> heatmap2 <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">face =</span> <span class="st">"italic"</span>),</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">axis.text.y=</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>))</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>heatmap2 <span class="ot">&lt;-</span> heatmap2 <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">""</span>)</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Mark the most significant cells with stars using threshold of P &lt; 0.02</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>heatmap2 <span class="ot">&lt;-</span> heatmap2 <span class="sc">+</span> <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(correlation.table, p.adj <span class="sc">&lt;</span> <span class="fl">0.02</span>), </span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">x =</span> X1, <span class="at">y =</span> X2, <span class="at">label =</span> <span class="st">"+"</span>), <span class="at">col =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="dv">5</span>)</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(heatmap2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="microbiome-data-report_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="microbiome-data-report_files/figure-html/correlation-sig-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<hr>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.5.1 (2025-06-13)
@@ -368,35 +837,41 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] gtsummary_2.4.0   knitr_1.50        reshape2_1.4.4    dplyr_1.1.4      
-[5] microbiome_1.30.0 ggplot2_4.0.0     phyloseq_1.52.0  
+[1] ggpubr_0.6.1      DT_0.34.0         knitr_1.50        reshape2_1.4.4   
+[5] dplyr_1.1.4       microbiome_1.30.0 ggplot2_4.0.0     phyloseq_1.52.0  
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.6            xfun_0.53               htmlwidgets_1.6.4      
- [4] rhdf5_2.52.1            Biobase_2.68.0          lattice_0.22-7         
- [7] rhdf5filters_1.20.0     vctrs_0.6.5             tools_4.5.1            
-[10] generics_0.1.4          biomformat_1.36.0       stats4_4.5.1           
-[13] parallel_4.5.1          tibble_3.3.0            cluster_2.1.8.1        
-[16] pkgconfig_2.0.3         Matrix_1.7-3            data.table_1.17.8      
-[19] RColorBrewer_1.1-3      S7_0.2.0                S4Vectors_0.46.0       
-[22] lifecycle_1.0.4         GenomeInfoDbData_1.2.14 compiler_4.5.1         
-[25] farver_2.1.2            stringr_1.5.2           Biostrings_2.76.0      
-[28] codetools_0.2-20        permute_0.9-8           GenomeInfoDb_1.44.3    
-[31] htmltools_0.5.8.1       yaml_2.3.10             tidyr_1.3.1            
-[34] pillar_1.11.1           crayon_1.5.3            MASS_7.3-65            
-[37] vegan_2.7-2             iterators_1.0.14        foreach_1.5.2          
-[40] nlme_3.1-168            tidyselect_1.2.1        digest_0.6.37          
-[43] Rtsne_0.17              stringi_1.8.7           purrr_1.1.0            
-[46] splines_4.5.1           ade4_1.7-23             fastmap_1.2.0          
-[49] grid_4.5.1              cli_3.6.5               magrittr_2.0.4         
-[52] utf8_1.2.6              survival_3.8-3          ape_5.8-1              
-[55] withr_3.0.2             UCSC.utils_1.4.0        scales_1.4.0           
-[58] rmarkdown_2.30          XVector_0.48.0          httr_1.4.7             
-[61] igraph_2.2.0            multtest_2.64.0         evaluate_1.0.5         
-[64] IRanges_2.42.0          mgcv_1.9-3              rlang_1.1.6            
-[67] Rcpp_1.1.0              glue_1.8.0              BiocGenerics_0.54.1    
-[70] rstudioapi_0.17.1       jsonlite_2.0.0          R6_2.6.1               
-[73] Rhdf5lib_1.30.0         plyr_1.8.9             </code></pre>
+ [1] ade4_1.7-23             tidyselect_1.2.1        farver_2.1.2           
+ [4] Biostrings_2.76.0       S7_0.2.0                fastmap_1.2.0          
+ [7] digest_0.6.37           lifecycle_1.0.4         cluster_2.1.8.1        
+[10] survival_3.8-3          magrittr_2.0.4          compiler_4.5.1         
+[13] sass_0.4.10             rlang_1.1.6             tools_4.5.1            
+[16] utf8_1.2.6              igraph_2.2.0            yaml_2.3.10            
+[19] data.table_1.17.8       ggsignif_0.6.4          labeling_0.4.3         
+[22] htmlwidgets_1.6.4       plyr_1.8.9              RColorBrewer_1.1-3     
+[25] abind_1.4-8             Rtsne_0.17              withr_3.0.2            
+[28] purrr_1.1.0             BiocGenerics_0.54.1     grid_4.5.1             
+[31] stats4_4.5.1            multtest_2.64.0         biomformat_1.36.0      
+[34] Rhdf5lib_1.30.0         scales_1.4.0            iterators_1.0.14       
+[37] MASS_7.3-65             cli_3.6.5               rmarkdown_2.30         
+[40] vegan_2.7-2             crayon_1.5.3            ragg_1.5.0             
+[43] generics_0.1.4          rstudioapi_0.17.1       httr_1.4.7             
+[46] cachem_1.1.0            ape_5.8-1               rhdf5_2.52.1           
+[49] stringr_1.5.2           splines_4.5.1           parallel_4.5.1         
+[52] XVector_0.48.0          vctrs_0.6.5             Matrix_1.7-3           
+[55] jsonlite_2.0.0          carData_3.0-5           car_3.1-3              
+[58] IRanges_2.42.0          S4Vectors_0.46.0        rstatix_0.7.2          
+[61] Formula_1.2-5           systemfonts_1.3.1       crosstalk_1.2.2        
+[64] foreach_1.5.2           jquerylib_0.1.4         tidyr_1.3.1            
+[67] glue_1.8.0              codetools_0.2-20        cowplot_1.2.0          
+[70] stringi_1.8.7           gtable_0.3.6            GenomeInfoDb_1.44.3    
+[73] UCSC.utils_1.4.0        tibble_3.3.0            pillar_1.11.1          
+[76] htmltools_0.5.8.1       rhdf5filters_1.20.0     GenomeInfoDbData_1.2.14
+[79] R6_2.6.1                textshaping_1.0.3       evaluate_1.0.5         
+[82] lattice_0.22-7          Biobase_2.68.0          backports_1.5.0        
+[85] broom_1.0.10            bslib_0.9.0             Rcpp_1.1.0             
+[88] nlme_3.1-168            permute_0.9-8           mgcv_1.9-3             
+[91] xfun_0.53               pkgconfig_2.0.3        </code></pre>
 </div>
 </div>
 </section>
