@@ -70,7 +70,7 @@ episodes:
 - 02-bioconductor.Rmd
 - 03-biological-sequences.Rmd
 - 04-annotations.Rmd
-- 05-s4-and-summarizedexperiment.Rmd
+- 05-s4.Rmd
 - 06-application-microbiome.Rmd
 - 07-reproducible-analysis.Rmd
 

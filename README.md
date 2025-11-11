@@ -4,7 +4,9 @@ Date: 2025-11-13
 
 Hosting venue: Pawsey Supercomputing Research Centre
 
-This is a lesson for the COMBINE WA workshop.
+This is a lesson for the COMBINE WA workshop (afternoon session).
+
+See the website version of the lesson https://siobhonlegan.com/2025-11-13-COMBINE-WA-afternoon/
 
 ---
 
