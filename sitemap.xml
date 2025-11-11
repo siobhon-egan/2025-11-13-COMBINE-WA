@@ -7,22 +7,40 @@
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/01-setup.html</loc>
   </url>
   <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/02-bioconductor.html</loc>
+  </url>
+  <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/02-introduction-to-bioconductor.html</loc>
+  </url>
+  <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/03-biological-sequences.html</loc>
   </url>
   <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/03-installing-bioconductor.html</loc>
   </url>
   <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/04-annotations.html</loc>
+  </url>
+  <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/04-getting-help.html</loc>
   </url>
   <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/05-s4-and-summarizedexperiment.html</loc>
+  </url>
+  <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/05-s4.html</loc>
+  </url>
+  <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/06-application-microbiome.html</loc>
   </url>
   <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/06-biological-sequences.html</loc>
   </url>
   <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/07-genomic-ranges.html</loc>
+  </url>
+  <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/07-reproducible-analysis.html</loc>
   </url>
   <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/08-annotations.html</loc>
@@ -67,22 +85,40 @@
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/01-setup.html</loc>
   </url>
   <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/02-bioconductor.html</loc>
+  </url>
+  <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/02-introduction-to-bioconductor.html</loc>
+  </url>
+  <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/03-biological-sequences.html</loc>
   </url>
   <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/03-installing-bioconductor.html</loc>
   </url>
   <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/04-annotations.html</loc>
+  </url>
+  <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/04-getting-help.html</loc>
   </url>
   <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/05-s4-and-summarizedexperiment.html</loc>
+  </url>
+  <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/05-s4.html</loc>
+  </url>
+  <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/06-application-microbiome.html</loc>
   </url>
   <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/06-biological-sequences.html</loc>
   </url>
   <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/07-genomic-ranges.html</loc>
+  </url>
+  <url>
+    <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/07-reproducible-analysis.html</loc>
   </url>
   <url>
     <loc>https://siobhon-egan.github.io/2025-11-13-COMBINE-WA/instructor/08-annotations.html</loc>

@@ -244,7 +244,7 @@
 <div class="accordion accordion-flush" id="accordionFlush2">
   <div class="accordion-item">
     <div class="accordion-header" id="flush-heading2">
-        <a href="01-setup.html">1. Introduction and setup</a>
+        <a href="01-introduction.html">1. Introduction</a>
     </div>
 <!--/div.accordion-header-->
 
@@ -256,7 +256,7 @@
 <div class="accordion accordion-flush" id="accordionFlush3">
   <div class="accordion-item">
     <div class="accordion-header" id="flush-heading3">
-        <a href="02-introduction-to-bioconductor.html">2. Introduction to Bioconductor</a>
+        <a href="02-bioconductor.html">2. Bioconductor Introduction &amp; Install</a>
     </div>
 <!--/div.accordion-header-->
 
@@ -268,7 +268,7 @@
 <div class="accordion accordion-flush" id="accordionFlush4">
   <div class="accordion-item">
     <div class="accordion-header" id="flush-heading4">
-        <a href="03-installing-bioconductor.html">3. Installing Bioconductor packages</a>
+        <a href="03-biological-sequences.html">3. Biological sequences</a>
     </div>
 <!--/div.accordion-header-->
 
@@ -280,7 +280,7 @@
 <div class="accordion accordion-flush" id="accordionFlush5">
   <div class="accordion-item">
     <div class="accordion-header" id="flush-heading5">
-        <a href="04-getting-help.html">4. Getting help</a>
+        <a href="04-annotations.html">4. Working with annotations</a>
     </div>
 <!--/div.accordion-header-->
 
@@ -292,7 +292,7 @@
 <div class="accordion accordion-flush" id="accordionFlush6">
   <div class="accordion-item">
     <div class="accordion-header" id="flush-heading6">
-        <a href="05-s4.html">5. S4 classes in Bioconductor</a>
+        <a href="05-s4-and-summarizedexperiment.html">5. The S4 and the SummarizedExperiment class</a>
     </div>
 <!--/div.accordion-header-->
 
@@ -304,7 +304,7 @@
 <div class="accordion accordion-flush" id="accordionFlush7">
   <div class="accordion-item">
     <div class="accordion-header" id="flush-heading7">
-        <a href="06-biological-sequences.html">6. Working with biological sequences</a>
+        <a href="06-application-microbiome.html">6. Microbiome application</a>
     </div>
 <!--/div.accordion-header-->
 
@@ -316,55 +316,7 @@
 <div class="accordion accordion-flush" id="accordionFlush8">
   <div class="accordion-item">
     <div class="accordion-header" id="flush-heading8">
-        <a href="07-genomic-ranges.html">7. Working with genomics ranges</a>
-    </div>
-<!--/div.accordion-header-->
-
-  </div>
-<!--/div.accordion-item-->
-</div>
-<!--/div.accordion-flush-->
-
-<div class="accordion accordion-flush" id="accordionFlush9">
-  <div class="accordion-item">
-    <div class="accordion-header" id="flush-heading9">
-        <a href="08-annotations.html">8. Working with annotations</a>
-    </div>
-<!--/div.accordion-header-->
-
-  </div>
-<!--/div.accordion-item-->
-</div>
-<!--/div.accordion-flush-->
-
-<div class="accordion accordion-flush" id="accordionFlush10">
-  <div class="accordion-item">
-    <div class="accordion-header" id="flush-heading10">
-        <a href="09-summarizedexperiment.html">9. The SummarizedExperiment class</a>
-    </div>
-<!--/div.accordion-header-->
-
-  </div>
-<!--/div.accordion-item-->
-</div>
-<!--/div.accordion-flush-->
-
-<div class="accordion accordion-flush" id="accordionFlush11">
-  <div class="accordion-item">
-    <div class="accordion-header" id="flush-heading11">
-        <a href="10-application-microbiome.html">10. Microbiome application</a>
-    </div>
-<!--/div.accordion-header-->
-
-  </div>
-<!--/div.accordion-item-->
-</div>
-<!--/div.accordion-flush-->
-
-<div class="accordion accordion-flush" id="accordionFlush12">
-  <div class="accordion-item">
-    <div class="accordion-header" id="flush-heading12">
-        <a href="11-reproducible-analysis.html">11. Reproducible analysis</a>
+        <a href="07-reproducible-analysis.html">7. Communicating &amp; Reproducing Analysis</a>
     </div>
 <!--/div.accordion-header-->
 
@@ -428,7 +380,7 @@
     <main id="main-content" class="main-content"><div class="container lesson-content">
         
         
-<section id="01-setup"><h2 class="section-heading"><a href="01-setup.html">Introduction and setup</a></h2>
+<section id="01-introduction"><h2 class="section-heading"><a href="01-introduction.html">Introduction</a></h2>
 <hr class="half-width">
 <ul>
 <li>Participants will only be able to install the version of
@@ -436,7 +388,7 @@ Bioconductor packages described in this lesson and reproduce their exact
 outputs if they use the correct version of R.</li>
 <li>The files used in this lesson should be downloaded in a local path
 that is easily accessible from an R session.</li>
-</ul></section><section id="02-introduction-to-bioconductor"><h2 class="section-heading"><a href="02-introduction-to-bioconductor.html">Introduction to Bioconductor</a></h2>
+</ul></section><section id="02-bioconductor"><h2 class="section-heading"><a href="02-bioconductor.html">Bioconductor Introduction &amp; Install</a></h2>
 <hr class="half-width">
 <ul>
 <li>R packages are but one aspect of the Bioconductor project.</li>
@@ -454,9 +406,6 @@ accessible on the Bioconductor website and YouTube channel.</li>
 converse and help each other, both as users and package developers.</li>
 <li>The Bioconductor project is governed by scientific, technical, and
 advisory boards, as well as a Code of Conduct committee.</li>
-</ul></section><section id="03-installing-bioconductor"><h2 class="section-heading"><a href="03-installing-bioconductor.html">Installing Bioconductor packages</a></h2>
-<hr class="half-width">
-<ul>
 <li>The BiocManager package is available from the CRAN repository.</li>
 <li>
 <code>BiocManager::install()</code> is used to install and update
@@ -470,18 +419,29 @@ Bioconductor currently installed.</li>
 <li>
 <code>BiocManager::install()</code> can also be used to update an
 entire R library to a specific version of Bioconductor.</li>
-</ul></section><section id="04-getting-help"><h2 class="section-heading"><a href="04-getting-help.html">Getting help</a></h2>
-<hr class="half-width">
-<ul>
 <li>The <code>browseVignettes()</code> function is recommended to access
 the vignette(s) installed with each package.</li>
-<li>Vignettes can also be accessed on the Bioconductor website, but
-beware of differences between package versions!</li>
 <li>The Bioconductor main website contains general information, package
 documentation, and course materials.</li>
-<li>The Bioconductor support site is the recommended place to contact
-developers and ask questions.</li>
-</ul></section><section id="05-s4"><h2 class="section-heading"><a href="05-s4.html">S4 classes in Bioconductor</a></h2>
+</ul></section><section id="03-biological-sequences"><h2 class="section-heading"><a href="03-biological-sequences.html">Biological sequences</a></h2>
+<hr class="half-width">
+<ul>
+<li>The <code>Biostrings</code> package defines classes to represent
+sequences of nucleotides and amino acids.</li>
+<li>The <code>Biostrings</code> package also defines methods to
+efficiently process biological sequences.</li>
+<li>The <code>BSgenome</code> package provides genome sequences for a
+range of model organisms immediately available as Bioconductor
+objects.</li>
+</ul></section><section id="04-annotations"><h2 class="section-heading"><a href="04-annotations.html">Working with annotations</a></h2>
+<hr class="half-width">
+<ul>
+<li>Bioconductor provides a wide range annotation packages.</li>
+<li>Some Bioconductor software packages can be used to programmatically
+access online resources.</li>
+<li>Users should carefully choose their source of annotations based on
+their needs and expectations.</li>
+</ul></section><section id="05-s4-and-summarizedexperiment"><h2 class="section-heading"><a href="05-s4-and-summarizedexperiment.html">The S4 and the SummarizedExperiment class</a></h2>
 <hr class="half-width">
 <ul>
 <li>S4 classes store information in slots, and check the validity of the
@@ -496,36 +456,6 @@ information about each column in metadata columns.</li>
 <li>The S4 class <code>Rle</code> extends the functionality of the base
 <code>vector</code>, for instance with the capacity to encode repetitive
 vectors in a memory-efficient format.</li>
-</ul></section><section id="06-biological-sequences"><h2 class="section-heading"><a href="06-biological-sequences.html">Working with biological sequences</a></h2>
-<hr class="half-width">
-<ul>
-<li>The <code>Biostrings</code> package defines classes to represent
-sequences of nucleotides and amino acids.</li>
-<li>The <code>Biostrings</code> package also defines methods to
-efficiently process biological sequences.</li>
-<li>The <code>BSgenome</code> package provides genome sequences for a
-range of model organisms immediately available as Bioconductor
-objects.</li>
-</ul></section><section id="07-genomic-ranges"><h2 class="section-heading"><a href="07-genomic-ranges.html">Working with genomics ranges</a></h2>
-<hr class="half-width">
-<ul>
-<li>The <code>GenomicRanges</code> package defines classes to represent
-ranges of coordinates on a genomic scale.</li>
-<li>The <code>GenomicRanges</code> package also defines methods to
-efficiently process genomic ranges.</li>
-<li>The <code>rtracklayer</code> package provides functions to import
-and export genomic ranges from and to common genomic file formats.</li>
-</ul></section><section id="08-annotations"><h2 class="section-heading"><a href="08-annotations.html">Working with annotations</a></h2>
-<hr class="half-width">
-<ul>
-<li>Bioconductor provides a wide range annotation packages.</li>
-<li>Some Bioconductor software packages can be used to programmatically
-access online resources.</li>
-<li>Users should carefully choose their source of annotations based on
-their needs and expectations.</li>
-</ul></section><section id="09-summarizedexperiment"><h2 class="section-heading"><a href="09-summarizedexperiment.html">The SummarizedExperiment class</a></h2>
-<hr class="half-width">
-<ul>
 <li>The <code>SummarizedExperiment</code> class provides a single
 container for storing both assay data and metadata.</li>
 <li>Assay data and metadata are kept synchronised through subsetting and
@@ -533,7 +463,7 @@ reordering operations.</li>
 <li>A comprehensive set of functions are available to access, add, and
 edit information stored in the various components of the
 <code>SummarizedExperiment</code> objects.</li>
-</ul></section><section id="10-application-microbiome"><h2 class="section-heading"><a href="10-application-microbiome.html">Microbiome application</a></h2>
+</ul></section><section id="06-application-microbiome"><h2 class="section-heading"><a href="06-application-microbiome.html">Microbiome application</a></h2>
 <hr class="half-width">
 <ul>
 <li>Bespoke often domain specific data classes are often built to serve
@@ -542,10 +472,10 @@ such as S4 class structures transferring formats between packages for
 analysis is much easier.</li>
 <li>Look for widely accepted data classes in your field before
 formatting your data for a specific package early on.</li>
-<li>Use <code>sessionInfo()</code> when using R to generate reports as a
-handy way to track package versions used to generate analysis and
-figures.</li>
-</ul></section><section id="11-reproducible-analysis"><h2 class="section-heading"><a href="11-reproducible-analysis.html">Reproducible analysis
+<li>Packages that generate <a href="https://ggplot2.tidyverse.org/" class="external-link"><em>ggplot2</em></a> compatible
+figures allow for <em>easier</em> manipulations and customise using
+familar syntax</li>
+</ul></section><section id="07-reproducible-analysis"><h2 class="section-heading"><a href="07-reproducible-analysis.html">Communicating &amp; Reproducing Analysis
 Microbiome data report for Supervisor meeting
 </a></h2>
 <hr class="half-width">
