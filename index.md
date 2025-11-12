@@ -42,44 +42,14 @@ In this lesson, you will learn:
 
 ## Prerequisites
 
-This workshop has been written is an **intermediate R** audience and as such we have made assumptions that participants are familiar with R. If you'd like to a fresh on some concepts we recommend the following:
+This workshop has been written is an **intermediate R** audience and as such we have made assumptions that participants are familiar with R. 
+If you'd like to a re-fresh on some concepts we recommend the following:
 
 - [R for Reproducible Scientific Analysis](https://swcarpentry.github.io/r-novice-gapminder/)
 - [Introduction to data analysis with R and Bioconductor](https://carpentries-incubator.github.io/bioc-intro/index.html).
     
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
-You will also need to install the following packages that will be used throughout the lesson - do this while the instructor is talking!
-
-
-```r
-# Install your CRAN packages
-install.packages(c(
-  "BiocManager",
-  "remotes",
-  "knitr",
-  "dplyr",
-  "ggplot2",
-  "DT",
-  "ggpubr"
-))
-
-# Install bioconductor packages
-BiocManager::install(
-  c(
-    "S4Vectors",
-    "Biostrings",
-    "BSgenome",
-    "BSgenome.Hsapiens.UCSC.hg38.masked",
-    "GenomicRanges",
-    "rtracklayer",
-    "biomaRt",
-    "microbiome",
-    "phyloseq"
-  )
-)
-```
 
 ---
 

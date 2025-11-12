@@ -3,6 +3,7 @@ episodes/*html
 site/*
 !site/README.md
 .DS_Store
+tmp/
 
 # History files
 .Rhistory
