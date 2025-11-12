@@ -89,9 +89,13 @@ It is best practice to not re-install the packages each time when making these r
 
 
 ``` r
-# Install your CRAN packages
+# specify latest BiocManager version compatible with R 4.5.1
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install(version = "3.22")
+
+# Install rest of your CRAN packages
 install.packages(c(
-  "BiocManager",
   "remotes",
   "knitr",
   "dplyr",
@@ -99,10 +103,6 @@ install.packages(c(
   "DT",
   "ggpubr"
 ))
-
-# Install your Bioconductor packages
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
 
 BiocManager::install(
   c("microbiome",
