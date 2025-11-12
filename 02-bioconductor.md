@@ -418,7 +418,7 @@ BiocManager::valid()
 ```
 
 ``` warning
-Warning: 1 packages out-of-date; 0 packages too new
+Warning: 2 packages out-of-date; 0 packages too new
 ```
 
 ``` output
@@ -462,12 +462,14 @@ loaded via a namespace (and not attached):
 
 Bioconductor version '3.22'
 
-  * 1 packages out-of-date
+  * 2 packages out-of-date
   * 0 packages too new
 
 create a valid installation with
 
-  BiocManager::install("rmarkdown", update = TRUE, ask = FALSE, force = TRUE)
+  BiocManager::install(c(
+    "digest", "rmarkdown"
+  ), update = TRUE, ask = FALSE, force = TRUE)
 
 more details: BiocManager::valid()$too_new, BiocManager::valid()$out_of_date
 ```
@@ -545,7 +547,7 @@ length(BiocManager::available())
 ```
 
 ``` output
-[1] 26633
+[1] 26647
 ```
 
 Specifically, the union of current Bioconductor repositories and other repositories on the search path can be displayed as follows.

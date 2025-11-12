@@ -282,6 +282,13 @@ to be reused in subsequent steps for querying information from the online mart.
 mart <- useMart(biomart = "ENSEMBL_MART_ENSEMBL", host = "https://may2024.archive.ensembl.org")
 ```
 
+:::::::::::::::::::::::::::::::::::::::::  callout
+
+
+If you find an error message here you may need to increase your timeout. Do this by typing the following directly into the console `options(timeout=120)`
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
 ### Listing available data sets
 
 Each biomart contains a number of data sets.

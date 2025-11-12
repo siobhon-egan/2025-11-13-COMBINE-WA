@@ -94,15 +94,17 @@ The content in this lesson has been heavily influenced from the material in the 
 The first three lessons have been restructured from episodes with additional material added to provide some practice with storing biological data sets, visualization, reproducible workflow and communicating results.
 
 - **Part A - Bioconductor episodes** - a revised and reduced content from the Carpentries Incubator lesson [The Bioconductor project](https://carpentries-incubator.github.io/bioc-project/). 
-  - Introduce, install and getting help with bioconductor
-  - Working with biological sequences
-  - Reproducible annotations
-  - Storing and organsing data using the s4 data-class and an example with `summarizedexperiment`
-- **Part B - application with biological data** - work through an example data set and packages from bioconductor for the storage, structure, and visualization of datasets
-- **Part C - reproducibility & communication** - a workflow using principals described in previous lessons to work through some practices for reproducible workflows and strategies for communicating and sharing results. 
+  - [Introduce, install and getting help with bioconductor](https://siobhonlegan.com/2025-11-13-COMBINE-WA-afternoon/02-bioconductor.html)
+  - [Working with biological sequences](https://siobhonlegan.com/2025-11-13-COMBINE-WA-afternoon/03-biological-sequences.html)
+  - [Reproducible annotations](https://siobhonlegan.com/2025-11-13-COMBINE-WA-afternoon/04-annotations.html)
+  - [Storing and organsing data using the s4 data-class and an example with `summarizedexperiment`](https://siobhonlegan.com/2025-11-13-COMBINE-WA-afternoon/05-s4.html)
+- **Part B - [application with biological data](https://siobhonlegan.com/2025-11-13-COMBINE-WA-afternoon/06-application-microbiome.html)** - work through an example data set and packages from bioconductor for the storage, structure, and visualization of datasets
+- **Part C - [reproducibility & communication](https://siobhonlegan.com/2025-11-13-COMBINE-WA-afternoon/07-reproducible-analysis.html)** - a workflow using principals described in previous lessons to work through some practices for reproducible workflows and strategies for communicating and sharing results. 
 
 
-Material in the first three lessons has been trimmed down, and we direct you to the full lesson material available in [The Bioconductor project](https://carpentries-incubator.github.io/bioc-project/). Note that the [Genomic ranges](https://carpentries-incubator.github.io/bioc-project/07-genomic-ranges.html) episode has been removed from content presented here.
+Material in Part A (the first four episodes) has been trimmed down, and we direct you to the full lesson material available in [The Bioconductor project](https://carpentries-incubator.github.io/bioc-project/). Note that the [Genomic ranges](https://carpentries-incubator.github.io/bioc-project/07-genomic-ranges.html) episode has been removed from content presented here.
+
+Episodes for parts B and C are longer workflows which we will work through together covering some fundamental concepts alongside lots of hands on exercises.
 
 [external-rstudio-project]: https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects
 

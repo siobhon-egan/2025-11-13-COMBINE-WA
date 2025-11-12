@@ -810,6 +810,18 @@ plot_tree(
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
+https://microbiome.github.io/OMA/docs/devel/
+
+:::::::::::::::::::::::::::::::::::::::::  callout
+
+### Want more bioconductor and microbiome (and related) analysis?
+
+- [Orchestrating Microbiome Analysis with Bioconductor](https://microbiome.github.io/OMA/docs/devel/) and related packages from the [miaverse](https://microbiome.github.io/)
+- [*microbiome* package tutorials](https://microbiome.github.io/tutorials/)
+- [*phyloseq* package tutorials](https://joey711.github.io/phyloseq/)
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
 ---
 
 :::::::::::::::::::::::::::::::::::::::: keypoints

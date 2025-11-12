@@ -190,6 +190,22 @@ Instead of `unnamed-chunk-1`, use descriptive names. This makes debugging and na
 
 Add chunks names in the the curly brackets of your R chunks. For example: `{r data-cleaning}`
 
+## Moving from a Rmd to an R
+
+Sometimes you may want to actually move away from the `.Rmd` or `.qmd`notebook and go back to just a `.R` file. When you first start out you may include a lot of notes and links for your understanding. Later on you get to a stage where you just want to rerun the code again quickly.
+
+You can convert an `.Rmd` or `.qmd` to a `.R` using the following:
+
+```r
+knitr::purl("your_document.Rmd", output = "extracted_code.R")
+```
+
+::: challenge
+### Challenge
+
+Have a go at exporting the a local `.Rmd` or `.qmd` file you have by adapting the code above
+:::
+
 ## Session info
 
 When sharing R Markdown (.Rmd) or Quarto (.qmd) notebooks, it's good practice to include information about your R session at the end of the document. This helps others (and future you!) understand:
@@ -242,7 +258,7 @@ loaded via a namespace (and not attached):
 [34] vegan_2.7-2         iterators_1.0.14    foreach_1.5.2      
 [37] nlme_3.1-168        tidyselect_1.2.1    digest_0.6.37      
 [40] Rtsne_0.17          stringi_1.8.7       purrr_1.2.0        
-[43] dplyr_1.1.4         reshape2_1.4.4      splines_4.5.2      
+[43] dplyr_1.1.4         reshape2_1.4.5      splines_4.5.2      
 [46] ade4_1.7-23         grid_4.5.2          cli_3.6.5          
 [49] magrittr_2.0.4      survival_3.8-3      ape_5.8-1          
 [52] withr_3.0.2         scales_1.4.0        XVector_0.50.0     
